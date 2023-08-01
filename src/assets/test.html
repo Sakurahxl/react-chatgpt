@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      /* 定义适老化样式的CSS变量 */
+      :root {
+        --font-size: 20px;
+        --background-color: #ffffff;
+        --text-color: #000000;
+        --button-padding: 10px 20px;
+        --button-border: 2px solid #000000;
+        --button-background: #ffffff;
+        --button-hover-background: #eeeeee;
+      }
+      
+      /* 使用CSS变量来设置样式 */
+      body {
+        font-size: var(--font-size);
+        background-color: var(--background-color);
+        color: var(--text-color);
+      }
+      
+      button {
+        padding: var(--button-padding);
+        border: var(--button-border);
+        background-color: var(--button-background);
+      }
+      
+      button:hover, button:focus {
+        background-color: var(--button-hover-background);
+        outline: none;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>适老化页面示例</h1>
+    
+    <button>点击我</button>
+    
+    <p>这是一个适合老年人的H5页面示例。</p>
+  </body>
+</html>
