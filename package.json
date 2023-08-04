@@ -11,8 +11,13 @@
   "dependencies": {
     "antd": "^5.8.0",
     "antd-mobile": "^5.32.0",
+    "antd-mobile-icons": "^0.3.0",
     "axios": "^1.4.0",
     "openai": "^3.3.0",
+    "react-markdown": "^8.0.7",
+    "rehype-katex": "^6.0.3",
+    "remark-gfm": "^3.0.1",
+    "remark-math": "^5.1.1",
     "umi": "^4.0.73"
   },
   "devDependencies": {

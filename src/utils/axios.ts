@@ -1,6 +1,6 @@
 import { message } from 'antd';
 import axios from 'axios';
-import { getMessage, handleRedirect } from './util';
+// import { getMessage, handleRedirect } from './util';
 
 
 export function checkError(data: any, config: any) {

@@ -17,8 +17,6 @@ const model = OPENAI_API_MODEL || "gpt-3.5-turbo";
 const sitePassword = SITE_PASSWORD || "";
 const passList = sitePassword.split(",") || [];
 
-
-
 export interface ErrorMessage {
   code: string;
   message: string;
