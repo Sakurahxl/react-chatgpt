@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import styles from "./index.less";
 import Content  from "./components/content";
 import AudioAnalyser from "@/component/AudioAnalyser";
+import { getBaiduToken } from "@/services/api";
 
 
 const AutoOld = () => {
@@ -15,6 +16,8 @@ const AutoOld = () => {
     audioSrc,
     timeslice: 1000, // 时间切片（https://developer.mozilla.org/en-US/docs/Web/API/MediaRecorder/start#Parameters）
     width: 350,
+    backgroundColor: "#ffffff",
+    strokeColor: "rgba(0, 0, 0, 1)",
     startCallback: (e: any) => {
         console.log("succ start", e)
     },
@@ -34,6 +37,7 @@ const AutoOld = () => {
 }
   const change = () => {
     let autoOld = document.documentElement.style;
+    getBaiduToken();
     if (isOld) {
       autoOld.setProperty(`--font-size`, "20px");
       autoOld.setProperty(`--background-color`, "#fffff");

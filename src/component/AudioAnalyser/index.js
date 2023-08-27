@@ -11,7 +11,7 @@ class AudioAnalyser extends Component {
     static renderProps = ["status", "audioSrc"]
 
     /**
-     * @author j_bleach 2020/1/1
+     * @author yhwsl/2023/8/23
      * @describe ["status", "audioSrc"]判断是否渲染
      * @param props: object
      * @param nextProps: object
@@ -95,6 +95,7 @@ class AudioAnalyser extends Component {
 
     }
 
+
     render() {
         const {
             children, className, audioSrc
@@ -106,12 +107,12 @@ class AudioAnalyser extends Component {
                   {this.renderCanvas()}
               </div>
               {children}
-              {
+              {/* {
                   audioSrc &&
                   <div>
                       <audio controls src={audioSrc} id={audioSrc.substring(audioSrc.length - 6)}/>
                   </div>
-              }
+              } */}
           </div>
         );
     }

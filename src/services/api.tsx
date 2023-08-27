@@ -59,4 +59,12 @@ const generatePayload = (
 // const openai = new OpenAIApi(configuration);
 // const response = await openai.listEngines();
 
+const baiduAppKey = "1S3rNYcZGyUqK1Uij17ZkpyD";
+const baidAppSecret = "xNZ8MqIWgyvWIRNT9qD89Npnih2Bruuj";
 
+export const getBaiduToken = async () => {
+  const data = await axios.get(
+    `https://openapi.baidu.com/oauth/2.0/token?grant_type=client_credentials&client_id=${baiduAppKey}&client_secret=${baidAppSecret}`
+  );
+  return data;
+};

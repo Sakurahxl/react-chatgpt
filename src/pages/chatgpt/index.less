@@ -10,11 +10,7 @@
 .content {
   height: 75vh;
   overflow: auto;
-  background-color:rgb(245,245,245)
-}
-
-.inputs {
-  // height: 10vh;
+  background-color: rgb(245, 245, 245);
 }
 
 :global {
@@ -23,10 +19,10 @@
     margin-top: 10px;
   }
   .adm-list-body {
-    background-color:rgb(245,245,245)
+    background-color: rgb(245, 245, 245);
   }
   .adm-list-item {
-    background-color:rgb(245,245,245)
+    background-color: rgb(245, 245, 245);
   }
   .adm-list-item-content-prefix {
     padding-left: 12px;
@@ -35,7 +31,7 @@
 
 .card {
   border-radius: 10px;
-  background:rgb(255,255,255);
+  background: rgb(255, 255, 255);
   width: fit-content;
   max-width: 37vh;
   font-size: 12px;
@@ -57,4 +53,22 @@ p {
   text-align: center;
   white-space: nowrap;
   font-size: 12px;
+}
+:global {
+  .audioContainer {
+    position: fixed;
+    z-index: 1000;
+    bottom: 130px;
+    right: 3.5%;
+    visibility: hidden;
+  }
+}
+
+audio {
+  width: 250px;
+}
+
+
+ul {
+  word-break: break-all;
 }

@@ -1,5 +1,5 @@
 /**
- * Created by j_bleach on 2018/8/25.
+ * Created by yhwsl on 2018/8/25.
  */
 function audioBufferToWav(buffer, opt = {}) {
     let numChannels = buffer.numberOfChannels
