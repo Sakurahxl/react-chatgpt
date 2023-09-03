@@ -27,6 +27,11 @@ export interface ErrorMessage {
   message: string;
 }
 
+export interface ErrorMessage {
+  code: string;
+  message: string;
+}
+
 // 发送信息
 // export const login = async function(params: any) {
 // 	const { data } = await axios.post(`${userPrefix}/account/login`, params);
