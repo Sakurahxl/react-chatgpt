@@ -1,4 +1,70 @@
-
 .title {
-  background: rgb(121, 242, 193);
+  // background: rgb(121, 242, 193);
+  margin: 0;
+  text-align: center;
+}
+
+.buttons {
+  display: flex;
+}
+
+.content {
+  height: 75vh;
+  overflow: auto;
+  background-color: rgb(245, 245, 245);
+}
+
+:global {
+  .adm-list-item-content {
+    border: none;
+    margin-top: 10px;
+  }
+  .adm-list-body {
+    background-color: rgb(245, 245, 245);
+  }
+  .adm-list-item {
+    background-color: rgb(245, 245, 245);
+  }
+  .adm-list-item-content-prefix {
+    // padding-left: O;
+    padding-right: 0;
+  }
+}
+
+.card {
+  border-radius: 10px;
+  background: rgb(255, 255, 255);
+  width: fit-content;
+  max-width: 37vh;
+  font-size: 12px;
+}
+.refresh {
+  width: 100%;
+  text-align: center;
+}
+
+code {
+  white-space: break-spaces;
+}
+
+p {
+  word-break: break-all;
+}
+:global {
+  .audioContainer {
+    position: fixed;
+    z-index: 1000;
+    bottom: 130px;
+    right: 3.5%;
+    visibility: hidden;
+  }
+}
+
+audio {
+  width: 250px;
+}
+
+
+ul {
+  word-break: break-all;
 }

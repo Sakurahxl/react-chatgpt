@@ -1,5 +1,9 @@
 import { defineConfig } from "umi";
 
 export default defineConfig({
-  npmClient: 'yarn',
+  publicPath: process.env.NODE_ENV === 'production' ? './' : '/',
+  history: {
+    type: "hash",
+  },
+  npmClient: "yarn",
 });
