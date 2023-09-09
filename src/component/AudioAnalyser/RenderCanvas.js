@@ -72,10 +72,10 @@ const RenderCanvas = Target => {
             this.canvasCtx.stroke();
         }
 
-        renderCanvas() {
+        renderCanvas(show = true) {
             const {height, width} = this.props;
             return <canvas ref={this.canvasRef} height={height} width={width}
-                           style={{width: width, height: height}}/>
+                           style={{width: width, height: height,display: show ?'block':'none'}}/>
         }
     }
 }

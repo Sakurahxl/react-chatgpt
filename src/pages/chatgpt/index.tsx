@@ -19,6 +19,7 @@ import system_prompt from "./systemPrompt";
 import "katex/dist/katex.min.css";
 import Recorder from "./components/Recorder";
 import VoiceBar from "./components/VoiceBar";
+import { history } from "umi";
 
 export interface ChatMessage {
   role: "system" | "user" | "assistant";
@@ -35,6 +36,12 @@ const demoAvatarImages = [
   "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fc-ssl.duitang.com%2Fuploads%2Fblog%2F202108%2F05%2F20210805211949_e77e4.thumb.1000_0.jpeg&refer=http%3A%2F%2Fc-ssl.duitang.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1693736807&t=673a4f17bead14824eabfa844929af8b",
   "https://img2.baidu.com/it/u=372601434,3534902205&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500",
 ];
+
+enum Type {
+  AUTOOLD = "/autoOld",
+  LOGIN = "/",
+  TESTPAGE = "/testPage",
+}
 
 const Chatgpt = () => {
   const textRef = useRef(null);
@@ -108,7 +115,8 @@ const Chatgpt = () => {
   //清空记录
   const clear = () => {
     clearText();
-    setMessageList([]);
+    //第一条系统提示词不清除
+    setMessageList(messageList.slice(0, 1));
     setShowList([]);
   };
 
@@ -148,6 +156,24 @@ const Chatgpt = () => {
     }
     temp.push(showMessage);
     setShowList([...temp]);
+    if (message.content.includes("跳转")) {
+      let url = message.content.split("跳转到")[1];
+      url = url.split("页面")[0];
+      Toast.show("5s后即将跳转到" + url + "页面");
+      setTimeout(() => {
+        switch (url) {
+          case "登录":
+            history.push(Type.LOGIN);
+            break;
+          case "适老化":
+            history.push(Type.AUTOOLD);
+            break;
+          case "测试":
+            history.push(Type.TESTPAGE);
+            break;
+        }
+      }, 5000);
+    }
   };
 
   //放入语音文件
@@ -220,8 +246,8 @@ const Chatgpt = () => {
               let judgeVoice = item.type === "audio";
               let judgeEnvir =
                 window.navigator.userAgent.indexOf("Html5Plus") === -1;
-              let audioSrc:string = "";
-              let content:string = "";
+              let audioSrc: string = "";
+              let content: string = "";
               if (judgeVoice) {
                 audioSrc = item.content.split('"')[1];
                 content = item.content.split("(")[1];
@@ -310,3 +336,19 @@ const Chatgpt = () => {
 };
 
 export default Chatgpt;
+
+// export default () => {
+//   return (
+//     <>
+//       <KeepAlive
+//         name="chatgpt"
+//         when={() => {
+//           /*根据路由的前进和后退状态去判断页面是否需要缓存，前进时缓存，后退时不缓存（卸载）。 when中的代码是在页面离开（卸载）时触发的。*/
+//           return history.action !== 'POP';
+//         }}
+//       >
+//         <Chatgpt />
+//       </KeepAlive>
+//     </>
+//   );
+// };

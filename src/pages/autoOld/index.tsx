@@ -3,6 +3,7 @@ import styles from "./index.less";
 import Content  from "./components/content";
 import AudioAnalyser from "@/component/AudioAnalyser";
 import { getBaiduToken } from "@/services/api";
+import Playbox from "../chatgpt/components/Playbox";
 
 
 const AutoOld = () => {
@@ -72,6 +73,7 @@ const AutoOld = () => {
   
   return (
     <div className={styles["box"]}>
+      <Playbox show={isOld}/>
       <h1>适老化页面示例</h1>
 
       <button onClick={change}>点击我进行适老化</button>

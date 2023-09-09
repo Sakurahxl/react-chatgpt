@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import styles from "./index.less";
 import VConsole from "vconsole";
 import { getBaiduToken, speechRecognition } from "@/services/api";
+import Playbox from "../Playbox";
 
 interface RecorderProps {
   pushAudio: (url: string, text: string) => void;
@@ -59,8 +60,6 @@ const Recorder = (prop: RecorderProps) => {
   //app baidu语音识别
   //录音
   const [recorderManager, setRecorderManager] = useState<any>(null);
-  //播放录音
-  const [innerAudioContext, setInnerAudioContext] = useState(null);
   //baidutoken
   const [baiduToken, setBaiduToken] = useState("");
 
@@ -99,9 +98,7 @@ const Recorder = (prop: RecorderProps) => {
       reco.onerror = function () {
         Toast.show("语音转换出错");
         reco.stop();
-        let dom: any = document.getElementsByClassName("audioContainer")[0];
         controlAudio("inactive");
-        dom.style.visibility = "hidden";
       };
       recognition.current = reco;
     } else {
@@ -120,14 +117,18 @@ const Recorder = (prop: RecorderProps) => {
   const recordStart = () => {
     recordMove();
     pressRef.current = setTimeout(() => {
-      let dom: any = document.getElementsByClassName("audioContainer")[0];
       let reco: any = recognition.current;
       //判断所处环境
       let userAgent = window.navigator.userAgent;
       if (userAgent.indexOf("Html5Plus") === -1) {
-        reco.start();
-        controlAudio("recording");
-        dom.style.visibility = "visible";
+        try {
+          reco.start();
+          controlAudio("recording");
+        } catch (e) {
+          Toast.show("语音开启失败，请等待语音识别完后重试");
+          reco.stop();
+          console.log(e);
+        }
       } else {
         onStart();
       }
@@ -138,14 +139,12 @@ const Recorder = (prop: RecorderProps) => {
   //停止录音
   const recordStop = () => {
     recordMove();
-    let dom: any = document.getElementsByClassName("audioContainer")[0];
     let reco: any = recognition.current;
     //判断所处环境
     let userAgent = window.navigator.userAgent;
     if (userAgent.indexOf("Html5Plus") === -1) {
       reco.stop();
       controlAudio("inactive");
-      dom.style.visibility = "hidden";
     } else {
       onEnd();
     }
@@ -167,7 +166,7 @@ const Recorder = (prop: RecorderProps) => {
     console.log("开始录音");
     recorderManager?.record({}, (recordFile: any) => {
       //录音后的回调函数
-      console.log("录音文件", recordFile);
+      // console.log("录音文件", recordFile);
       setAudioSrc(recordFile);
       Audio2dataURL(recordFile);
     });
@@ -176,14 +175,23 @@ const Recorder = (prop: RecorderProps) => {
     console.log("结束录音");
     recorderManager?.stop();
   };
-  const onspeechToText = (adioFileData: string, adioSize: number,url:string) => {
+  const onspeechToText = (
+    adioFileData: string,
+    adioSize: number,
+    url: string
+  ) => {
     //获取token
     getBaiduToken().then((res: any) => {
       setBaiduToken(res.data.access_token);
-      postData(res.data.access_token, adioFileData, adioSize,url);
+      postData(res.data.access_token, adioFileData, adioSize, url);
     });
   };
-  const postData = (token: string, adioFileData: string, adioSize: number,url:string) => {
+  const postData = (
+    token: string,
+    adioFileData: string,
+    adioSize: number,
+    url: string
+  ) => {
     let data = {
       format: "amr", //语音文件的格式，pcm/wav/amr/m4a。不区分大小写。推荐pcm文件
       rate: 8000, //	采样率，16000，固定值 此处文档参数16000，达不到这种高保真音频，故 使用8000
@@ -212,7 +220,11 @@ const Recorder = (prop: RecorderProps) => {
           // @ts-ignore
           let fileReader = new plus.io.FileReader();
           fileReader.onloadend = (e: any) => {
-            onspeechToText(e.target.result.split(",")[1], file.size,file.fullPath);
+            onspeechToText(
+              e.target.result.split(",")[1],
+              file.size,
+              file.fullPath
+            );
           };
           fileReader.readAsDataURL(file);
         },
@@ -223,6 +235,14 @@ const Recorder = (prop: RecorderProps) => {
     });
   };
 
+  const showRecord = () => {
+    let userAgent = window.navigator.userAgent;
+    if (userAgent.indexOf("Html5Plus") === -1) {
+      return <AudioAnalyser show={isRecord} {...audioProps}/>;
+    } else {
+      return <Playbox show={isRecord} />;
+    }
+  };
 
   return (
     <div>
@@ -230,7 +250,7 @@ const Recorder = (prop: RecorderProps) => {
         axis="xy"
         magnetic="x"
         style={{
-          "--initial-position-bottom": "24px",
+          "--initial-position-bottom": "150px",
           "--initial-position-right": "24px",
           "--edge-distance": "24px",
         }}
@@ -248,7 +268,7 @@ const Recorder = (prop: RecorderProps) => {
           )}
         </Button>
       </FloatingBubble>
-      <AudioAnalyser {...audioProps} />
+      {showRecord()}
     </div>
   );
 };

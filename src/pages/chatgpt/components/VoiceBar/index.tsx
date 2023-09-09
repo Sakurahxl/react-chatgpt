@@ -19,9 +19,11 @@ const VoiceBar = (props: VoiceBarProps) => {
       // @ts-ignore
       let audio = plus.audio.createPlayer(url);
       setAudioPlayer(audio);
-      handleAudioStyleWidth(audio.getDuration());
+      setTimeout(() => {
+        handleAudioStyleWidth(audio.getDuration());
+      }, 1000);
     }
-  }, []);
+  }, [url]);
   //播放
   const playVoice = (audioSrc: string) => {
     setIsPlay(true);
@@ -37,8 +39,11 @@ const VoiceBar = (props: VoiceBarProps) => {
   };
 
   // 设置语音条宽度样式
-  const handleAudioStyleWidth = (len:number)=> {
+  const handleAudioStyleWidth = (len: number) => {
     let dom: any = audioRef.current;
+    console.log("aaaa");
+    console.log("len", len);
+
     if (len === 1) {
       dom.style.width = "38px";
     } else if (len > 1 && len < 20) {
@@ -46,17 +51,23 @@ const VoiceBar = (props: VoiceBarProps) => {
     } else if (len >= 20) {
       dom.style.width = `${106.39 + (len / 10) * 18.935}px`;
     }
-  }
+  };
 
   return (
     <div className={styles["audio-detail-msg"]}>
-      <div ref={audioRef} className={`${styles["audio-style"]} ${isPlay && styles['add-animation']}`} onClick={() => playVoice(url)}>
+      <div
+        ref={audioRef}
+        className={`${styles["audio-style"]} ${
+          isPlay && styles["add-animation"]
+        }`}
+        onClick={() => playVoice(url)}
+      >
         <div className={styles["small"]}></div>
         <div className={styles["middle"]}></div>
         <div className={styles["large"]}></div>
       </div>
       <div className={styles["duration-seconds"]}>
-        {audioPlayer?.getDuration()??"0"}s
+        {audioPlayer?.getDuration() ?? "0"}s
       </div>
     </div>
   );

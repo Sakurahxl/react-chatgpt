@@ -1,0 +1,206 @@
+.audio-record {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 150px;
+  height: 145px;
+  background: rgba(0, 0, 0, 0.8);
+  padding: 25px;
+  border-radius: 15px;
+  color: #ccc;
+  font-size: 15px;
+  text-align: center;
+  p {
+    margin: 0;
+  }
+  .duration-seconds-style {
+    height: 20px;
+  }
+
+  .icon {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    margin: 18px 0 30px;
+  }
+
+  .voice-animation {
+    margin-left: 15px;
+
+    p {
+      height: 3px;
+      margin-top: 4px;
+      background: #666;
+    }
+
+    p:nth-of-type(1) {
+      width: 28px;
+    }
+
+    p:nth-of-type(2) {
+      width: 24px;
+    }
+
+    p:nth-of-type(3) {
+      width: 20px;
+    }
+
+    p:nth-of-type(4) {
+      width: 16px;
+    }
+
+    p:nth-of-type(5) {
+      width: 12px;
+    }
+
+    p:nth-of-type(6) {
+      width: 8px;
+    }
+
+    p:nth-of-type(7) {
+      width: 5px;
+    }
+
+    &.start {
+      p:nth-of-type(1) {
+        animation: backgroundInfinite7 1.5s ease-in-out infinite;
+      }
+
+      p:nth-of-type(2) {
+        animation: backgroundInfinite6 1.5s ease-in-out infinite;
+      }
+
+      p:nth-of-type(3) {
+        animation: backgroundInfinite5 1.5s ease-in-out infinite;
+      }
+
+      p:nth-of-type(4) {
+        animation: backgroundInfinite4 1.5s ease-in-out infinite;
+      }
+
+      p:nth-of-type(5) {
+        animation: backgroundInfinite3 1.5s ease-in-out infinite;
+      }
+
+      p:nth-of-type(6) {
+        animation: backgroundInfinite2 1.5s ease-in-out infinite;
+      }
+
+      p:nth-of-type(7) {
+        background: #f5f5f5;
+      }
+    }
+  }
+  .record-status {
+    width: 100px;
+    height: 28px;
+    margin: 0 auto;
+    line-height: 28px;
+    color: #888;
+    border-radius: 2px;
+
+    &:hover {
+      color: #04113d;
+      background: #e1e1e1;
+    }
+
+    p {
+      cursor: pointer;
+    }
+  }
+
+    // 语音录制动画
+    @keyframes backgroundInfinite2 {
+      0% {
+        background: #666;
+      }
+      20% {
+        background: #f5f5f5;
+      }
+      95% {
+        background: #f5f5f5;
+      }
+      100% {
+        background: #666;
+      }
+    }
+   
+    @keyframes backgroundInfinite3 {
+      0% {
+        background: #666;
+      }
+      30% {
+        background: #f5f5f5;
+      }
+      85% {
+        background: #f5f5f5;
+      }
+      100% {
+        background: #666;
+      }
+    }
+   
+    @keyframes backgroundInfinite4 {
+      0% {
+        background: #666;
+      }
+      55% {
+        background: #f5f5f5;
+      }
+      75% {
+        background: #f5f5f5;
+      }
+      100% {
+        background: #666;
+      }
+    }
+   
+    @keyframes backgroundInfinite5 {
+      0% {
+        background: #666;
+      }
+      45% {
+        background: #666;
+      }
+      60% {
+        background: #f5f5f5;
+      }
+      75% {
+        background: #f5f5f5;
+      }
+      100% {
+        background: #666;
+      }
+    }
+   
+    @keyframes backgroundInfinite6 {
+      0% {
+        background: #666;
+      }
+      65% {
+        background: #666;
+      }
+      85% {
+        background: #f5f5f5;
+      }
+      100% {
+        background: #666;
+      }
+    }
+   
+    @keyframes backgroundInfinite7 {
+      0% {
+        background: #666;
+      }
+      75% {
+        background: #666;
+      }
+      95% {
+        background: #f5f5f5;
+      }
+      100% {
+        background: #666;
+      }
+    }
+}
