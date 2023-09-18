@@ -10,6 +10,7 @@
     "start": "npm run dev"
   },
   "dependencies": {
+    "ahooks": "^3.7.8",
     "antd": "^5.8.0",
     "antd-mobile": "^5.32.0",
     "antd-mobile-icons": "^0.3.0",

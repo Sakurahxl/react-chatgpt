@@ -15,24 +15,17 @@ axios.interceptors.request.use(
 // 拦截网络响应
 axios.interceptors.response.use(
   (response) => {
-    // let resData = response.data;
-    // console.log(resData);
-
-    // if (resData.code === 200) {
-    //   return resData.data;
-    // } else if (resData.code === -1) {
-    //   Toast.show(resData.msg);
-    //   //抛出异常
-    //   return Promise.reject(new Error(resData.msg));
-    // }
     return response;
   },
   (error) => {
     if (error && error.stack.indexOf("timeout") > -1) {
-      Toast.show("请求超时");
-    } else {
-      Toast.show("网络错误");
+      Toast.show("Get timeout");
+    } else if (error.response) {  
+      Toast.show(error.response.data.message);
+    }else {
+      Toast.show("Network Error");
     }
+
     return Promise.reject(error);
   }
 );

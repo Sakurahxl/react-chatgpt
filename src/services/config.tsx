@@ -17,6 +17,8 @@ const OPENAI_API_MODEL = "";
 const BAIDU_APP_KEY = "1S3rNYcZGyUqK1Uij17ZkpyD";
 const BAIDU_APP_SECRET = "xNZ8MqIWgyvWIRNT9qD89Npnih2Bruuj";
 
+const URL_PREFIX = "http://localhost:8866";
+
 
 export {
   OPENAI_API_KEY,
@@ -27,5 +29,6 @@ export {
   SITE_PASSWORD,
   OPENAI_API_MODEL,
   BAIDU_APP_KEY,
-  BAIDU_APP_SECRET
+  BAIDU_APP_SECRET,
+  URL_PREFIX
 };
