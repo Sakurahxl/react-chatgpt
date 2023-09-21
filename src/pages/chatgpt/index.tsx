@@ -7,6 +7,7 @@ import {
   Card,
   DotLoading,
   List,
+  NavBar,
   TextArea,
   Toast,
 } from "antd-mobile";
@@ -20,6 +21,8 @@ import "katex/dist/katex.min.css";
 import Recorder from "./components/Recorder";
 import VoiceBar from "./components/VoiceBar";
 import { history } from "umi";
+import { message } from "antd";
+import RecorderWeb from "./components/RecorderWeb";
 
 export interface ChatMessage {
   role: "system" | "user" | "assistant";
@@ -55,9 +58,12 @@ const Chatgpt = () => {
   const [textareaValue, setTextareaValue] = useState("");
   //加载状态判断
   const [loading, setLoading] = useState(false);
+  //true为电脑端，false为手机端
+  const [judgeEnvir, setJudgeEnvir] = useState(true);
 
   //放入提示词
   useEffect(() => {
+    setJudgeEnvir(window.navigator.userAgent.indexOf("Html5Plus") === -1);
     messageList.push({
       role: "system",
       content: system_prompt,
@@ -156,6 +162,10 @@ const Chatgpt = () => {
     }
     temp.push(showMessage);
     setShowList([...temp]);
+    commandToJump(message);
+  };
+
+  const commandToJump = (message: any) => {
     if (message.content.includes("跳转")) {
       let url = message.content.split("跳转到")[1];
       url = url.split("页面")[0];
@@ -203,6 +213,12 @@ const Chatgpt = () => {
     }
   };
 
+  //返回
+  const turnBack = () => {
+    // @ts-ignore
+    self.location=document.referrer;
+  }
+
   return (
     <div>
       {/* <link
@@ -211,7 +227,9 @@ const Chatgpt = () => {
         integrity="sha384-RZU/ijkSsFbcmivfdRBQDtwuwVqK7GMOw6IMvKyeWL2K5UAlyp6WonmB8m7Jd0Hn"
         crossOrigin="anonymous"
       /> */}
-      <h1 className={styles.title}>山涧晴岚</h1>
+      <NavBar onBack={turnBack} style={{ backgroundColor: "white" }}>
+        山涧晴岚
+      </NavBar>
       <div className={styles.content} ref={contentRef}>
         <List
           style={{
@@ -232,6 +250,7 @@ const Chatgpt = () => {
                     style={{
                       background: "rgb(149,235,105)",
                       marginLeft: "12px",
+                      maxWidth: judgeEnvir ? "50%" : "37vh",
                     }}
                   >
                     <ReactMarkdown
@@ -244,8 +263,6 @@ const Chatgpt = () => {
               );
             } else if (item.role === "user") {
               let judgeVoice = item.type === "audio";
-              let judgeEnvir =
-                window.navigator.userAgent.indexOf("Html5Plus") === -1;
               let audioSrc: string = "";
               let content: string = "";
               if (judgeVoice) {
@@ -259,7 +276,13 @@ const Chatgpt = () => {
                   prefix={<Avatar src={demoAvatarImages[1]} />}
                   style={{ direction: "rtl", textAlign: "end" }}
                 >
-                  <Card className={styles.card} style={{ marginRight: "12px" }}>
+                  <Card
+                    className={styles.card}
+                    style={{
+                      marginRight: "12px",
+                      maxWidth: judgeEnvir ? "50%" : "37vh",
+                    }}
+                  >
                     {/* 解决符号在文字左边 */}
                     {!judgeVoice && <span>{item.content}&#x200E;</span>}
                     {judgeVoice && (
@@ -328,9 +351,13 @@ const Chatgpt = () => {
           <Button color="primary" fill="outline" onClick={clearText}>
             清空文本
           </Button>
+          {judgeEnvir ? (
+            <RecorderWeb pushAudio={pushAudio} />
+          ) : (
+            <Recorder pushAudio={pushAudio} />
+          )}
         </div>
       </div>
-      <Recorder pushAudio={pushAudio} />
     </div>
   );
 };

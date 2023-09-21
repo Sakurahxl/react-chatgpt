@@ -1,4 +1,3 @@
-import AudioAnalyser from "@/component/AudioAnalyser";
 import { Button, FloatingBubble, Toast } from "antd-mobile";
 import { AudioFill } from "antd-mobile-icons";
 import { useEffect, useRef, useState } from "react";
@@ -23,40 +22,6 @@ const Recorder = (prop: RecorderProps) => {
   const [tempText, setTempText] = useState("");
   //网页直接语音转文字
   const recognition = useRef(null);
-  //浏览器自带音频
-  const [status, setStatus] = useState("");
-  const audioProps = {
-    // audioType,
-    // audioOptions: {sampleRate: 30000}, // 设置输出音频采样率
-    status,
-    audioSrc,
-    timeslice: 1000, // 时间切片（https://developer.mozilla.org/en-US/docs/Web/API/MediaRecorder/start#Parameters）
-    width: 350,
-    backgroundColor: "rgba(0, 0, 0, 0)",
-    strokeColor: "rgba(0, 0, 0, 1)",
-    startCallback: (e: any) => {
-      // console.log("succ start", e);
-    },
-    pauseCallback: (e: any) => {
-      // console.log("succ pause", e);
-    },
-    stopCallback: (e: any) => {
-      let url = window.URL.createObjectURL(e);
-      setAudioSrc(url);
-      if (tempText.length === 0) {
-        Toast.show("语音转换识别失败");
-        return;
-      }
-      pushAudio(url, tempText);
-      // console.log("succ stop", e);
-    },
-    onRecordCallback: (e: any) => {
-      // console.log("recording", e);
-    },
-    errorCallback: (err: any) => {
-      console.log("error", err);
-    },
-  };
   //app baidu语音识别
   //录音
   const [recorderManager, setRecorderManager] = useState<any>(null);
@@ -67,48 +32,9 @@ const Recorder = (prop: RecorderProps) => {
   useEffect(() => {
     //初始化打印
     let vConsole = new VConsole();
-    //判断所处环境
-    let userAgent = window.navigator.userAgent;
-
-    if (userAgent.indexOf("Html5Plus") === -1) {
-      // @ts-ignore
-      var SpeechRecognition: any = webkitSpeechRecognition || SpeechRecognition;
-      let reco = new SpeechRecognition();
-      reco.continuous = true;
-      reco.interimResults = true;
-      reco.lang = "zh-CN";
-      reco.addEventListener("result", (event: any) => {
-        let result = "";
-        for (let i = 0; i <= event.resultIndex; i++) {
-          result += event.results[i][0].transcript;
-        }
-        setTempText(result);
-      });
-
-      reco.onstart = function () {
-        console.log("语音已开启");
-      };
-
-      reco.onend = function () {
-        console.log("语音已关闭");
-        setTempText("");
-        setIsRecord(false);
-      };
-
-      reco.onerror = function () {
-        Toast.show("语音转换出错");
-        reco.stop();
-        controlAudio("inactive");
-      };
-      recognition.current = reco;
-    } else {
-      // @ts-ignore
-      const recorder = plus.audio.getRecorder();
-      // const innerAudio = uni.createInnerAudioContext();
-      // innerAudio.autoplay = true;
-      setRecorderManager(recorder);
-      // setInnerAudioContext(innerAudio);
-    }
+    // @ts-ignore
+    const recorder = plus.audio.getRecorder();
+    setRecorderManager(recorder);
   }, []);
 
   useEffect(() => {}, [tempText]);
@@ -117,21 +43,7 @@ const Recorder = (prop: RecorderProps) => {
   const recordStart = () => {
     recordMove();
     pressRef.current = setTimeout(() => {
-      let reco: any = recognition.current;
-      //判断所处环境
-      let userAgent = window.navigator.userAgent;
-      if (userAgent.indexOf("Html5Plus") === -1) {
-        try {
-          reco.start();
-          controlAudio("recording");
-        } catch (e) {
-          Toast.show("语音开启失败，请等待语音识别完后重试");
-          reco.stop();
-          console.log(e);
-        }
-      } else {
-        onStart();
-      }
+      onStart();
       setIsRecord(true);
     }, 1000);
   };
@@ -139,26 +51,13 @@ const Recorder = (prop: RecorderProps) => {
   //停止录音
   const recordStop = () => {
     recordMove();
-    let reco: any = recognition.current;
-    //判断所处环境
-    let userAgent = window.navigator.userAgent;
-    if (userAgent.indexOf("Html5Plus") === -1) {
-      reco.stop();
-      controlAudio("inactive");
-    } else {
-      onEnd();
-    }
+    onEnd();
     setIsRecord(false);
   };
 
   //移动时不录音,清除定时器
   const recordMove = () => {
     pressRef.current && clearTimeout(pressRef.current);
-  };
-
-  //控制录音状态
-  const controlAudio = (str: string) => {
-    setStatus(str);
   };
 
   //baidu语音识别
@@ -235,15 +134,6 @@ const Recorder = (prop: RecorderProps) => {
     });
   };
 
-  const showRecord = () => {
-    let userAgent = window.navigator.userAgent;
-    if (userAgent.indexOf("Html5Plus") === -1) {
-      return <AudioAnalyser show={isRecord} {...audioProps}/>;
-    } else {
-      return <Playbox show={isRecord} />;
-    }
-  };
-
   return (
     <div>
       <FloatingBubble
@@ -268,7 +158,7 @@ const Recorder = (prop: RecorderProps) => {
           )}
         </Button>
       </FloatingBubble>
-      {showRecord()}
+      <Playbox show={isRecord} />
     </div>
   );
 };

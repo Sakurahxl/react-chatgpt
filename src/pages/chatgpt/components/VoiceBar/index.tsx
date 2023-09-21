@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import styles from "./index.less";
-import { set } from "lodash";
 
 interface VoiceBarProps {
   url: string;
