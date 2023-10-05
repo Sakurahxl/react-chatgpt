@@ -6,4 +6,5 @@ export default defineConfig({
     type: "hash",
   },
   npmClient: "yarn",
+  plugins: ['umi-plugin-keep-alive'],
 });

@@ -15,6 +15,7 @@
     "antd-mobile": "^5.32.0",
     "antd-mobile-icons": "^0.3.0",
     "axios": "^1.4.0",
+    "hls.js": "^1.4.12",
     "katex": "^0.16.8",
     "openai": "^3.3.0",
     "react-markdown": "^8.0.7",
@@ -22,13 +23,16 @@
     "remark-gfm": "^3.0.1",
     "remark-math": "^5.1.1",
     "umi": "^4.0.73",
-    "vconsole": "^3.15.1"
+    "umi-plugin-keep-alive": "^0.0.1-beta.35",
+    "vconsole": "^3.15.1",
+    "xml2js": "^0.6.2"
   },
   "devDependencies": {
     "@types/crypto-js": "^4.0.0",
     "@types/katex": "^0.16.2",
     "@types/react": "^18.0.33",
     "@types/react-dom": "^18.0.11",
+    "@types/xml2js": "^0.4.12",
     "typescript": "^5.0.3"
   }
 }

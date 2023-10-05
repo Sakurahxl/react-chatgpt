@@ -1,0 +1,43 @@
+.personal {
+  background-color: rgb(244, 244, 244);
+  .information {
+    margin: 0 auto;
+    width: 768px;
+    .card {
+      margin: 0 10px;
+      margin-top: 10px;
+      .title {
+        font-weight: 1000;
+        font-size: 25px;
+        margin-top: 0;
+        margin-bottom: 10px;
+        margin-left: 5px;
+      }
+
+      .description {
+        margin-left: 5px;
+      }
+
+      .btn {
+        text-align: center;
+        margin-top: 60px;
+      }
+    }
+  }
+
+  /* 媒体查询，适用于小屏幕（手机端） */
+  @media screen and (max-width: 768px) {
+    .information {
+      width: 100%; /* 在小屏幕上设置宽度为100%以充满屏幕宽度 */
+      .card {
+        .description {
+          margin-left: 5vh;
+        }
+
+        .title {
+          margin-left: 5vh;
+        }
+      }
+    }
+  }
+}

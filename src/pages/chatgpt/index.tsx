@@ -20,9 +20,12 @@ import system_prompt from "./systemPrompt";
 import "katex/dist/katex.min.css";
 import Recorder from "./components/Recorder";
 import VoiceBar from "./components/VoiceBar";
-import { history } from "umi";
+import { history,KeepAlive } from "umi";
 import { message } from "antd";
 import RecorderWeb from "./components/RecorderWeb";
+import { getInfo } from "@/services/user";
+import { getLoginStatus } from "@/services/auth";
+
 
 export interface ChatMessage {
   role: "system" | "user" | "assistant";
@@ -37,7 +40,6 @@ export interface showMessage {
 
 const demoAvatarImages = [
   "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fc-ssl.duitang.com%2Fuploads%2Fblog%2F202108%2F05%2F20210805211949_e77e4.thumb.1000_0.jpeg&refer=http%3A%2F%2Fc-ssl.duitang.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1693736807&t=673a4f17bead14824eabfa844929af8b",
-  "https://img2.baidu.com/it/u=372601434,3534902205&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500",
 ];
 
 enum Type {
@@ -60,6 +62,13 @@ const Chatgpt = () => {
   const [loading, setLoading] = useState(false);
   //true为电脑端，false为手机端
   const [judgeEnvir, setJudgeEnvir] = useState(true);
+  const [userAvatar, setUserAvatar] = useState("");
+
+  useEffect(() => {
+    getInfo({ account: getLoginStatus()}).then((res) => {
+      setUserAvatar(res.avatar);
+    });
+  }, []);
 
   //放入提示词
   useEffect(() => {
@@ -216,7 +225,8 @@ const Chatgpt = () => {
   //返回
   const turnBack = () => {
     // @ts-ignore
-    self.location=document.referrer;
+    // self.location=document.referrer;
+    history.back();
   }
 
   return (
@@ -273,7 +283,7 @@ const Chatgpt = () => {
               return (
                 <List.Item
                   key={index}
-                  prefix={<Avatar src={demoAvatarImages[1]} />}
+                  prefix={<Avatar src={userAvatar} />}
                   style={{ direction: "rtl", textAlign: "end" }}
                 >
                   <Card
@@ -362,20 +372,21 @@ const Chatgpt = () => {
   );
 };
 
-export default Chatgpt;
 
-// export default () => {
-//   return (
-//     <>
-//       <KeepAlive
-//         name="chatgpt"
-//         when={() => {
-//           /*根据路由的前进和后退状态去判断页面是否需要缓存，前进时缓存，后退时不缓存（卸载）。 when中的代码是在页面离开（卸载）时触发的。*/
-//           return history.action !== 'POP';
-//         }}
-//       >
-//         <Chatgpt />
-//       </KeepAlive>
-//     </>
-//   );
-// };
+export default () => {
+  return (
+    <>
+      <KeepAlive
+        name="chatgpt"
+        // when={() => {
+        //   /*根据路由的前进和后退状态去判断页面是否需要缓存，前进时缓存，后退时不缓存（卸载）。 when中的代码是在页面离开（卸载）时触发的。*/
+        //   return history.action !== 'POP';
+        // }}
+        saveScrollPosition="screen"
+        when={true}
+      >
+        <Chatgpt />
+      </KeepAlive>
+    </>
+  );
+};

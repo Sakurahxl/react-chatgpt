@@ -67,20 +67,20 @@ const LoginWeb = () => {
               name="name"
               rules={[{ required: true, message: "请输入用户名!" }]}
             >
-              <Input placeholder="Name" />
+              <Input placeholder="用户名" />
             </Form.Item>
             <Form.Item
               name="account"
               rules={[{ required: true, message: "请输入账号!" }]}
             >
-              <Input placeholder="Account" />
+              <Input placeholder="账号" />
             </Form.Item>
             <Form.Item
               name="password"
               rules={[{ required: true, message: "请输入密码!" }]}
             >
               <Input.Password
-                placeholder="Password"
+                placeholder="密码"
                 iconRender={(visible) => <div />}
               />
             </Form.Item>
@@ -99,7 +99,7 @@ const LoginWeb = () => {
               ]}
               dependencies={["password"]} //依赖password
             >
-              <Input.Password placeholder="Check Password" />
+              <Input.Password placeholder="确认密码" />
             </Form.Item>
             <Form.Item wrapperCol={{ offset: 5, span: 16 }}>
               <Button type="primary" htmlType="submit">
@@ -132,13 +132,13 @@ const LoginWeb = () => {
               name="account"
               rules={[{ required: true, message: "请输入账号!" }]}
             >
-              <Input placeholder="Account" />
+              <Input placeholder="账号" />
             </Form.Item>
             <Form.Item
               name="password"
               rules={[{ required: true, message: "请输入密码!" }]}
             >
-              <Input.Password placeholder="Password" />
+              <Input.Password placeholder="密码" />
             </Form.Item>
             <a className={styles["form_link"]}>忘记密码？</a>
             <Form.Item wrapperCol={{ offset: 5, span: 16 }}>

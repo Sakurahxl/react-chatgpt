@@ -1,6 +1,6 @@
 import { login, register } from "@/services/user";
 import { Button, Form, Input, NavBar, Image } from "antd-mobile";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import loginImg from "@/assets/login.png";
 import registerImg from "@/assets/register.png";
 import { history } from "umi";
@@ -10,17 +10,12 @@ const LoginApp = () => {
   const [registerFrom] = Form.useForm();
   const [isRegister, setIsRegister] = useState(true);
   const onLogin = () => {
-    let temp = loginForm.getFieldsValue();
-    if(temp.account==='123'&& temp.password==='123'){
-    history.push("/chatgpt");
-    }
-    // login(loginForm.getFieldsValue());
+    console.log(loginForm.getFieldsValue());
+    login(loginForm.getFieldsValue());
   };
   const onRegister = () => {
     let data = registerFrom.getFieldsValue();
     delete data.checkPassword;
-    console.log(data);
-
     register(data).then((judge) => {
       setIsRegister(judge);
       if (!judge) {
@@ -42,6 +37,7 @@ const LoginApp = () => {
             <p onClick={changeForm}>{isRegister ? "用户登录" : "用户注册"}</p>
           }
           style={{ backgroundColor: "white" }}
+          onBack={()=>{history.back();}}
         >
           {isRegister ? "用户注册" : "用户登录"}
         </NavBar>
@@ -63,19 +59,19 @@ const LoginApp = () => {
                 name="name"
                 rules={[{ required: true, message: "请输入用户名!" }]}
               >
-                <Input placeholder="Name" />
+                <Input placeholder="用户名" />
               </Form.Item>
               <Form.Item
                 name="account"
-                rules={[{ required: true, message: "用户名不能为空" }]}
+                rules={[{ required: true, message: "账号不能为空" }]}
               >
-                <Input placeholder="Account" />
+                <Input placeholder="账号" />
               </Form.Item>
               <Form.Item
                 name="password"
                 rules={[{ required: true, message: "密码不能为空" }]}
               >
-                <Input placeholder="Password" />
+                <Input placeholder="密码" />
               </Form.Item>
               <Form.Item
                 name="checkPassword"
@@ -92,7 +88,7 @@ const LoginApp = () => {
                 ]}
                 dependencies={["password"]} //依赖password
               >
-                <Input placeholder="Check Password" />
+                <Input placeholder="确认密码" />
               </Form.Item>
             </Form>
           </div>
@@ -114,13 +110,13 @@ const LoginApp = () => {
                 name="account"
                 rules={[{ required: true, message: "用户名不能为空" }]}
               >
-                <Input placeholder="Account" />
+                <Input placeholder="用户名" />
               </Form.Item>
               <Form.Item
                 name="password"
                 rules={[{ required: true, message: "密码不能为空" }]}
               >
-                <Input placeholder="Password" />
+                <Input placeholder="密码" />
               </Form.Item>
             </Form>
           </div>

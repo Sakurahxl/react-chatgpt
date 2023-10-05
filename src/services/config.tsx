@@ -17,7 +17,10 @@ const OPENAI_API_MODEL = "";
 const BAIDU_APP_KEY = "1S3rNYcZGyUqK1Uij17ZkpyD";
 const BAIDU_APP_SECRET = "xNZ8MqIWgyvWIRNT9qD89Npnih2Bruuj";
 
-const URL_PREFIX = "http://localhost:8866";
+// 本地
+// const URL_PREFIX = "http://localhost:8866";
+// 线上
+const URL_PREFIX = "http://82.157.238.203:8866";
 
 
 export {

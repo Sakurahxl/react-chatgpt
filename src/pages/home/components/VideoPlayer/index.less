@@ -1,0 +1,293 @@
+.video-player {
+  position: relative;
+  height: 100%;
+  &.fullscreen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 999;
+  }
+  video {
+    background-color: #000000;
+  }
+  .barrage {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 100%;
+    user-select: none;
+  }
+  .controls {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+    .play-button {
+      position: absolute;
+      right: 12px;
+      bottom: 56px;
+      width: 46px;
+      height: 46px;
+      opacity: 0.85;
+      background-size: 100% auto;
+      &.play {
+        background-image: url("../../../../assets/tv-play.png");
+      }
+      &.pause {
+        background-image: url("../../../../assets/tv-pause.png");
+      }
+    }
+    .control-bar {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      height: 44px;
+      background-color: rgba(0, 0, 0, 0.5);
+      &.live-control {
+        background-color: transparent;
+        background-image: linear-gradient(
+          180deg,
+          transparent,
+          rgba(0, 0, 0, 0.7)
+        );
+        .left {
+          margin-left: 12px;
+        }
+      }
+      .left {
+        display: inline-block;
+        line-height: 44px;
+        color: #ffffff;
+        font-size: 15.6px;
+        font-family: arial, sans-serif;
+        & > span {
+          display: inline-block;
+        }
+        .time,
+        .total-duration {
+          width: 50px;
+        }
+        .time {
+          text-align: right;
+        }
+        .split {
+          width: 7.6px;
+          text-align: center;
+        }
+        .total-duration {
+          text-align: left;
+        }
+      }
+      .center {
+        position: absolute;
+        left: 108px;
+        top: 21px;
+        right: 108px;
+        height: 2px;
+        .progress-wrapper {
+          position: relative;
+          height: 100%;
+          background-color: #4c4c4c;
+          .progress {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            background-color: #de698c;
+            &:after {
+              content: "";
+              display: block;
+              position: absolute;
+              top: -6.6px;
+              right: -14px;
+              width: 14px;
+              height: 14px;
+              background-color: #ffffff;
+              box-shadow: 0.5px 0.5px 3px #000000;
+              border-radius: 50%;
+            }
+          }
+        }
+      }
+      .right {
+        float: right;
+        margin-right: 12px;
+        .barrage-on,
+        .barrage-off {
+          display: inline-block;
+          width: 24px;
+          height: 24px;
+          margin-top: 10px;
+          background-size: 100% auto;
+        }
+        .barrage-on {
+          background-image: url("../../../../assets/barrage-on.png");
+        }
+        .barrage-off {
+          background-image: url("../../../../assets/barrage-off.png");
+        }
+        .fullscreen {
+          display: inline-block;
+          width: 24px;
+          height: 24px;
+          margin-top: 10px;
+          margin-left: 16px;
+          background-image: url("../../../../assets/fullscreen.png");
+          background-size: 100% auto;
+        }
+      }
+    }
+  }
+  .cover {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    font-size: 15px;
+    color: #ffffff;
+    background-color: #7d7d7d;
+    overflow: hidden;
+    z-index: 99;
+    .title {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      text-align: center;
+      line-height: 32px;
+      z-index: 1;
+    }
+    .pic {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      opacity: 0.85;
+      border-style: none;
+    }
+    .pre-play {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 14px;
+      .duration {
+        display: inline-block;
+        padding: 0 8px;
+        margin-left: 12px;
+        font-size: 12px;
+        line-height: 20px;
+        border: 1px solid hsla(0, 0%, 100%, 0.6);
+        background-color: hsla(0, 0%, 100%, 0.2);
+        border-radius: 2px;
+      }
+      .preview {
+        float: right;
+        width: 46px;
+        height: 46px;
+        margin-right: 12px;
+        margin-top: -20px;
+        background: url("../../../../assets/tv-play.png");
+        background-size: 100% auto;
+      }
+    }
+  }
+  .loading {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    color: #ffffff;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 99;
+    .wrapper {
+      text-align: center;
+      .img {
+        width: 40px;
+        height: 40px;
+      }
+      .text {
+        display: block;
+        margin-top: 4px;
+      }
+    }
+  }
+  .finish-cover {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 100;
+    overflow: hidden;
+    .cover-pic {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+    }
+    .cover-wrapper {
+      position: relative;
+      height: 100%;
+      padding: 0 12px;
+      font-size: 14px;
+      color: #ffffff;
+      background-color: rgba(0, 0, 0, 0.8);
+      .replay {
+        position: absolute;
+        right: 12px;
+        bottom: 30px;
+        .replay-icon {
+          display: inline-block;
+          float: left;
+          width: 16px;
+          height: 16px;
+          margin-top: 2px;
+          margin-right: 3px;
+          background-image: url("../../../../assets/ico-play.png");
+          background-size: 100% 100%;
+        }
+      }
+    }
+  }
+  .notice-cover {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 100;
+    background-color: #000000;
+    .notice-wrapper {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      i {
+        display: block;
+        width: 200px;
+        height: 114px;
+        background-image: url("../../../../assets/nocontent.png");
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+      }
+      span {
+        display: block;
+        text-align: center;
+        font-size: 14px;
+        color: #23ade5;
+      }
+    }
+  }
+}
