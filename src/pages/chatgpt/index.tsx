@@ -16,16 +16,14 @@ import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
 import remarkGfm from "remark-gfm";
 import { RedoOutline } from "antd-mobile-icons";
-import system_prompt from "./systemPrompt";
 import "katex/dist/katex.min.css";
 import Recorder from "./components/Recorder";
 import VoiceBar from "./components/VoiceBar";
-import { history,KeepAlive } from "umi";
-import { message } from "antd";
+import { history, KeepAlive } from "umi";
 import RecorderWeb from "./components/RecorderWeb";
 import { getInfo } from "@/services/user";
-import { getLoginStatus } from "@/services/auth";
-
+import { getLoginStatus, getPrompt, getUnload } from "@/services/auth";
+import jumpPage from "./jumpPage";
 
 export interface ChatMessage {
   role: "system" | "user" | "assistant";
@@ -48,7 +46,7 @@ enum Type {
   TESTPAGE = "/testPage",
 }
 
-const Chatgpt = () => {
+const Chatgpt = (props: any) => {
   const textRef = useRef(null);
   const contentRef = useRef(null);
   const sendRef = useRef(null);
@@ -65,8 +63,8 @@ const Chatgpt = () => {
   const [userAvatar, setUserAvatar] = useState("");
 
   useEffect(() => {
-    getInfo({ account: getLoginStatus()}).then((res) => {
-      setUserAvatar(res.avatar);
+    getInfo({ account: getLoginStatus() }).then((res) => {
+      setUserAvatar(res.avatar??"https://img2.baidu.com/it/u=372601434,3534902205&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500");
     });
   }, []);
 
@@ -75,7 +73,7 @@ const Chatgpt = () => {
     setJudgeEnvir(window.navigator.userAgent.indexOf("Html5Plus") === -1);
     messageList.push({
       role: "system",
-      content: system_prompt,
+      content: getPrompt(),
     });
   }, []);
 
@@ -180,17 +178,10 @@ const Chatgpt = () => {
       url = url.split("页面")[0];
       Toast.show("5s后即将跳转到" + url + "页面");
       setTimeout(() => {
-        switch (url) {
-          case "登录":
-            history.push(Type.LOGIN);
-            break;
-          case "适老化":
-            history.push(Type.AUTOOLD);
-            break;
-          case "测试":
-            history.push(Type.TESTPAGE);
-            break;
-        }
+        jumpPage.filter((item) => {
+          item.name === url;
+          return history.push(item.path);
+        });
       }, 5000);
     }
   };
@@ -227,10 +218,10 @@ const Chatgpt = () => {
     // @ts-ignore
     // self.location=document.referrer;
     history.back();
-  }
+  };
 
   return (
-    <div>
+    <div className={styles["chatgpt"]}>
       {/* <link
         rel="stylesheet"
         href="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.css"
@@ -297,16 +288,21 @@ const Chatgpt = () => {
                     {!judgeVoice && <span>{item.content}&#x200E;</span>}
                     {judgeVoice && (
                       <div>
-                        {content}&#x200E;
                         {audioSrc &&
                           (judgeEnvir ? (
-                            <audio
-                              controls
-                              src={audioSrc}
-                              id={audioSrc.substring(audioSrc.length - 6)}
-                            />
+                            <div style={{ direction: "ltr", display: "grid" }}>
+                              {content}&#x200E;
+                              <audio
+                                controls
+                                src={audioSrc}
+                                id={audioSrc.substring(audioSrc.length - 6)}
+                              />
+                            </div>
                           ) : (
-                            <VoiceBar url={audioSrc} />
+                            <div>
+                              {content}&#x200E;
+                              <VoiceBar url={audioSrc} />
+                            </div>
                           ))}
                       </div>
                     )}
@@ -372,15 +368,21 @@ const Chatgpt = () => {
   );
 };
 
-
 export default () => {
+  useEffect(() => {
+    const judge = getUnload();
+    if (judge === "true") {
+      location.reload();
+    }
+  }, []);
   return (
     <>
       <KeepAlive
         name="chatgpt"
+        // achekey={judgeUnload}
         // when={() => {
-        //   /*根据路由的前进和后退状态去判断页面是否需要缓存，前进时缓存，后退时不缓存（卸载）。 when中的代码是在页面离开（卸载）时触发的。*/
-        //   return history.action !== 'POP';
+        /*根据路由的前进和后退状态去判断页面是否需要缓存，前进时缓存，后退时不缓存（卸载）。 when中的代码是在页面离开（卸载）时触发的。*/
+        // return history.action !== 'POP';
         // }}
         saveScrollPosition="screen"
         when={true}

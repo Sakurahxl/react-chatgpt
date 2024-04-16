@@ -14,4 +14,88 @@
       display: block;
     }
   }
+  @width: 117.312px; // 示例中的宽度值，根据实际需要进行调整
+
+  .history {
+    padding: 0 12px 19px 12px;
+
+    .history-item {
+      margin-top: 8px;
+
+      .item-title {
+        font-size: 14px;
+        color: #999999;
+        line-height: 34px;
+      }
+
+      .item-wrapper {
+        height: 73.194px;
+        margin-bottom: 19px;
+        a {
+          text-decoration: none;
+        }
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+
+        .img-container {
+          float: left;
+          width: @width;
+          height: 100%;
+          border-radius: 6px;
+          background-color: #e7e7e7;
+          background-image: url("../../../assets//tv.png");
+          background-size: 73.08px 73.08px;
+          background-position: 22px 0;
+          background-repeat: no-repeat;
+          overflow: hidden;
+
+          img {
+            width: 100%;
+            height: @width;
+          }
+        }
+
+        .info {
+          margin-left: 130px;
+          .title {
+            height: 34px;
+            line-height: 17px;
+            font-size: 18px;
+            color: #212121;
+            overflow: hidden;
+          }
+
+          .time {
+            margin-top: 24px;
+            height: 14px;
+            line-height: 14px;
+            font-size: 12px;
+            color: #999999;
+          }
+        }
+      }
+    }
+  }
+
+  .tips {
+    padding-top: 85.2px;
+    text-align: center;
+
+    img {
+      display: block;
+      width: 280px;
+      margin: 0 auto;
+    }
+
+    .text {
+      font-size: 16px;
+      color: #999999;
+
+      a {
+        color: #fb7299;
+      }
+    }
+  }
 }

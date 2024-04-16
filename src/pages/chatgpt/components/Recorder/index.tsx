@@ -31,7 +31,7 @@ const Recorder = (prop: RecorderProps) => {
   //语音转文字部署,google需要vpn
   useEffect(() => {
     //初始化打印
-    let vConsole = new VConsole();
+    // let vConsole = new VConsole();
     // @ts-ignore
     const recorder = plus.audio.getRecorder();
     setRecorderManager(recorder);

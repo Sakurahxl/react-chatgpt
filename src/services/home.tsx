@@ -21,6 +21,9 @@ export const getRankings = async (rId: number) => {
 // 获取视频详情
 export const getVideoDetail = async (aId: number) => {
   const data = await axios.get(`${URL_PREFIX}/av/${aId}`);
+  if (data.data.code === -400) {
+    return null;
+  }
   const video = createVideoByDetail(data.data.data);
   getVideoUrl(aId, video.cId).then((res) => {
     video.url = res.durl[0].url;

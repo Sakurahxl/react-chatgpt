@@ -1,0 +1,31 @@
+.setting {
+  background-color: rgb(244, 244, 244);
+  background-clip: content-box;
+  height: 100vh;
+  .information {
+    background-color: white;
+    margin: 0 auto;
+    width: 768px; 
+    overflow: auto;
+    .upload {
+      margin-left: 70vh;
+    }
+  }
+
+  :global {
+    .adm-image-img{
+      border-radius: 50px;
+    }
+  }
+  /* 媒体查询，适用于小屏幕（手机端） */
+  @media screen and (max-width: 768px) {
+    background-color: rgb(244, 244, 244);
+    background-clip: content-box;
+    .information {
+      width: 100%; /* 在小屏幕上设置宽度为100%以充满屏幕宽度 */
+      .upload {
+        margin-left: 18vh
+      }
+    }
+  }
+}

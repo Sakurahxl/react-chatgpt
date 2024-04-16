@@ -16,6 +16,8 @@ import { formatDate } from "@/utils/datetime";
 import { context } from "@/services/context";
 import storage from "@/utils/storage";
 import { Avatar, NavBar } from "antd-mobile";
+import { FloatButton, message } from "antd";
+import { Image } from "antd-mobile";
 
 interface DetailState {
   loading: boolean;
@@ -38,30 +40,50 @@ const VideoDetail = () => {
     showLoadMore: true,
     comments: [],
   });
+  const [aId, setAId] = useState<number>(Number(params.aId?.slice(2)) || 0);
   useEffect(() => {
-    if (!params.aId) {
+    // 不存在视频返回首页
+    if (aId === 0) {
+      toHome();
       return;
-    }
-    let aId = Number(params.aId.slice(2));
-    getVideoDetail(aId).then((res) => {
+    } 
+    getVideoDetail(aId).then((res: Video | null) => {
+      // 找不到视频返回首页
+      if (res===null) {
+        toHome();
+        return;
+      }
       setTimeout(() => {
         setVideo(res);
       }, 500);
-
       // 记录当前视频信息
       storage.setViewHistory({
-        aId: res.aId || 0,
-        title: res.title || "",
-        pic: res.pic || "",
+        aId: res.aId,
+        title: res.title,
+        pic: res.pic,
         viewAt: new Date().getTime(),
       });
     });
-    getRecommentVides(aId);
+    getRecommentVideos(aId);
   }, []);
+  
+  useEffect(() => {
+    if (Number(params.aId?.slice(2)) !== aId) {
+      location.reload();
+    }
+  }, [params.aId]);
 
   useEffect(() => {}, [video]);
   useEffect(() => {}, [control]);
 
+
+  // 返回首页
+  const toHome = () => {
+    history.push({
+      pathname: "/home",
+    });
+    message.error("视频不存在");
+  }
   /**
    * 展开或隐藏全部信息
    */
@@ -145,11 +167,10 @@ const VideoDetail = () => {
     if (!params.aId) {
       return;
     }
-    let aId = Number(params.aId.slice(2));
     getComments(aId, null);
   };
 
-  const getRecommentVides = (aId: number) => {
+  const getRecommentVideos = (aId: number) => {
     getRecommendVideo(aId).then((result) => {
       const recommendVides = result.data.data.map((item: any) =>
         createVideo(item)
@@ -272,11 +293,10 @@ const VideoDetail = () => {
               <a
                 onClick={() => {
                   history.push("/home/video/av" + v.aId);
-                  location.reload();
                 }}
               >
                 <div className={styles["image-container"]}>
-                  <img src={getPicUrl(v.pic, "@320w_200h")} alt={v.title} />
+                  <Image src={getPicUrl(v.pic, "@320w_200h")} alt={v.title} lazy/>
                   <div className={styles.duration}>
                     {formatDuration(v.duration, "0#:##:##")}
                   </div>
@@ -317,20 +337,19 @@ const VideoDetail = () => {
             <div className={styles["comment-list"]}>
               {control.comments.map((comment: any, i: string) => (
                 <div className={styles["comment-wrapper"]} key={i}>
-                  <Link to={"/space/" + comment.user.mId}>
-                    {/* <LazyLoad height="2rem"> */}
-                    <img
+                  {/* <Link to={"/space/" + comment.user.mId}> */}
+                    <Image
                       className={styles["comment-up-pic"]}
                       src={getPicUrl(comment.user.face, "@60w_60h")}
                       alt={comment.user.name}
+                      lazy
                     />
-                    {/* </LazyLoad> */}
-                  </Link>
+                  {/* </Link> */}
                   <span className={styles["comment-time"]}>{comment.date}</span>
                   <div className={styles["comment-up-user"]}>
-                    <Link to={"/space/" + comment.user.mId}>
+                    {/* <Link to={"/space/" + comment.user.mId}> */}
                       {comment.user.name}
-                    </Link>
+                    {/* </Link> */}
                   </div>
                   <div className={styles["comment-content"]}>
                     {comment.content}
@@ -353,7 +372,7 @@ const VideoDetail = () => {
           </div>
         ) : null}
       </div>
-      {/* <ScrollToTop /> */}
+      <FloatButton.BackTop />
     </div>
   );
 };

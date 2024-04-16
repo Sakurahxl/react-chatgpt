@@ -5,6 +5,7 @@ import { Video } from "../../types/Video";
 import playCount from "@/assets/play-count.svg";
 import barrageCount from "@/assets/barrage-count.svg";
 import { history } from "umi";
+import { Image } from "antd-mobile";
 
 interface VideoItemProps {
   video: Video;

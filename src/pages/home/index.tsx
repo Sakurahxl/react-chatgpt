@@ -1,4 +1,4 @@
-import { Badge, FloatingBubble, TabBar } from "antd-mobile";
+import { Badge, TabBar } from "antd-mobile";
 import {
   AppOutline,
   MessageFill,
@@ -6,16 +6,17 @@ import {
   UnorderedListOutline,
   UserOutline,
 } from "antd-mobile-icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "./index.less";
 import Personal from "./personal";
-import { history } from "umi";
-import loginImg from "@/assets/login.gif";
 import HomePage from "./homePage";
 import Todo from "./todo";
 import Message from "./message";
+import FloatIcon from "@/component/FloatIcon";
+import { KeepAlive, useParams } from "umi";
 
 const Home = () => {
+  const params = useParams();
   const tabs = [
     {
       key: "home",
@@ -25,7 +26,7 @@ const Home = () => {
     },
     {
       key: "todo",
-      title: "待办",
+      title: "历史",
       icon: <UnorderedListOutline />,
       badge: "5",
     },
@@ -45,11 +46,17 @@ const Home = () => {
 
   const [activeKey, setActiveKey] = useState("home");
 
+  useEffect(() => {
+    if (params.go) {
+      setActiveKey(tabs[+params.go]?.key??'home');
+    }
+  }, [params.go]);
+
   return (
     <div>
       <div className={styles.content}>
         {activeKey === "home" && <HomePage />}
-        {activeKey === "todo" && <Todo/>}
+        {activeKey === "todo" && <Todo />}
         {activeKey === "message" && <Message />}
         {activeKey === "personal" && <Personal />}
       </div>
@@ -62,21 +69,26 @@ const Home = () => {
           <TabBar.Item key={item.key} icon={item.icon} title={item.title} />
         ))}
       </TabBar>
-      <FloatingBubble
-        axis="xy"
-        magnetic="x"
-        style={{
-          "--initial-position-bottom": "150px",
-          "--initial-position-right": "24px",
-          "--edge-distance": "24px",
-        }}
-        onClick={() => {
-          history.push("/chatgpt");
-        }}
-      >
-        <img style={{ width: "100%" }} src={loginImg} />
-      </FloatingBubble>
+      <FloatIcon />
     </div>
   );
 };
-export default Home;
+
+export default () => {
+  return (
+    <>
+      <KeepAlive
+        name="home"
+        // achekey={judgeUnload}
+        // when={() => {
+        /*根据路由的前进和后退状态去判断页面是否需要缓存，前进时缓存，后退时不缓存（卸载）。 when中的代码是在页面离开（卸载）时触发的。*/
+        // return history.action !== 'POP';
+        // }}
+        saveScrollPosition="screen"
+        when={true}
+      >
+        <Home />
+      </KeepAlive>
+    </>
+  );
+};
