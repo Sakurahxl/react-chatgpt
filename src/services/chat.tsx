@@ -190,14 +190,13 @@ export const websocketSend = () => {
   scrollBottom();
 };
 
-// export const getChatList= async () => {
-//     const fromUser = getLoginStatus();
-//     const data = await axios.get(`${URL_PREFIX}/chat/getChatList/`, {
-//         params: { fromUser }
-//     });
-//     console.log(data);
-//     return data.data;
-// }
+export const getChatList= async () => {
+    const fromUser = getLoginStatus();
+    const data = await axios.get(`${URL_PREFIX}/chat/getChatList/`, {
+        params: { fromUser }
+    });
+    return data.data;
+}
 
 // // 向上滚动获取历史记录
 // scrollHistory: async function(event) {

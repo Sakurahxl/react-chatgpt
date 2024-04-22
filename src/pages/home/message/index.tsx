@@ -11,6 +11,7 @@ import {
   Dialog,
   SwipeAction,
   SwipeActionRef,
+  PullToRefresh,
 } from "antd-mobile";
 import AddOutline from "antd-mobile-icons/es/AddOutline";
 import ListTitle from "./components/ListTitle";
@@ -29,8 +30,9 @@ import {
   CloseCircleOutline,
 } from "antd-mobile-icons";
 import { getLoginStatus } from "@/services/auth";
+import { getChatList } from "@/services/chat";
 
-export interface Icontact {
+export interface IContact {
   avatar: string;
   name: string;
   description: string;
@@ -38,14 +40,25 @@ export interface Icontact {
   account: string;
   status: string;
   createTime?: string;
+  unread?: number;
+}
+
+export interface IConversation {
+  contactId: number;
+  friendAccount: string;
+  friendPicture: string;
+  fromWindow: number;
+  lastMessage: string;
+  sendTime: Date;
+  unread: number;
 }
 
 const MessageApp = () => {
-  const [contacts, setContacts] = useState<Icontact[]>([]);
+  const [contacts, setContacts] = useState<IContact[]>([]);
   const [searchList, setSearchList] = useState([]);
   const [sentList, setSentList] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [searchValue, setsearchValue] = useState("");
+  const [searchValue, setSearchValue] = useState("");
   const searchRef = useRef<SearchBarRef>(null);
   const timeRef = useRef<any>(null);
   const swipeActionRef = useRef<SwipeActionRef>(null);
@@ -62,41 +75,53 @@ const MessageApp = () => {
 
   useEffect(() => {
     getContactsList();
-    timeRef.current
-      ? (timeRef.current = setInterval(() => {
-          console.log("refresh");
-          getContactsList();
-        }, 1000 * 60 * 3))
-      : clearInterval(timeRef.current); // 3 分钟刷新一次
+    refresh();
   }, []);
 
-  // 获取联系人列表
-  const getContactsList = () => {
-    getContacts().then((res) => {
-      // console.log(res);
-      const contactWithId: Icontact[] = [...res.confirmed, ...res.accepted].map(
-        (item: Icontact, index: number) => {
-          item.id = index + 1 + ""; // 使用数组索引作为 id，这里索引从 0 开始，所以加 1
-          return item;
-        }
-      );
-      setContacts(contactWithId);
-      setSentList(res.sent);
-    });
+  const refresh = () => {
+    timeRef.current
+      ? clearInterval(timeRef.current)
+      : (timeRef.current = setInterval(() => {
+          console.log("refresh");
+          getContactsList();
+        }, 1000 * 60 * 3)); // 3 分钟刷新一次
   };
 
-  const searchContactsList = (value: string) => {
+  // 获取联系人列表
+  const getContactsList = async () => {
+    let chatList = await getChatList();
+    let contacts = await getContacts();
+    const contactWithId: IContact[] = [
+      ...contacts.confirmed,
+      ...contacts.accepted,
+    ].map((item: IContact, index: number) => {
+      let i = chatList.findIndex(
+        (conversation: IConversation) =>
+          conversation.friendAccount === item.account
+      );
+      if (i !== -1) {
+        item.unread = chatList[i].unread;
+      }
+      item.id = index + 1 + ""; // 使用数组索引作为 id，这里索引从 0 开始，所以加 1
+      return item;
+    });
+    setContacts(contactWithId);
+    setSentList(contacts.sent);
+  };
+
+  const searchContactsList = async (value: string) => {
     setSearchList([]);
-    searchContacts(value).then((res) => {
-      res = res.filter(
-        (item: { account: string }) => item.account !== getLoginStatus()
-      ); // 过滤掉该账号
-      const contactWithId = res.map((item: { id: string }, index: number) => {
+    let searchList = await searchContacts(value);
+    searchList = searchList.filter(
+      (item: { account: string }) => item.account !== getLoginStatus()
+    ); // 过滤掉该账号
+    const contactWithId = searchList.map(
+      (item: { id: string }, index: number) => {
         item.id = index + 1 + ""; // 使用数组索引作为 id，这里索引从 0 开始，所以加 1
         return item;
-      });
-      setSearchList(contactWithId);
-    });
+      }
+    );
+    setSearchList(contactWithId);
   };
 
   const toChatWindow = () => {
@@ -140,81 +165,93 @@ const MessageApp = () => {
       <div className={styles["top-wrapper"]}>
         <Header display={true} />
       </div>
-      <List header={<ListTitle addContact={showModal} />}>
-        {contacts.map((contact: Icontact) => {
-          let isAccepted = contact.status === "accepted";
-          return (
-            <SwipeAction
-              ref={swipeActionRef}
-              key={contact.id}
-              rightActions={
-                isAccepted
-                  ? [
-                      {
-                        key: "delete",
-                        text: "删除",
-                        color: "danger",
-                        onClick: async () => {
-                          await Dialog.confirm({
-                            content: "确定要删除该联系人吗？",
-                            onConfirm: async () => {
-                              await delContact(contact.account).then((res) => {
-                                if (res === "delete successfully") {
-                                  getContactsList();
-                                  searchContactsList(searchValue);
-                                }
-                              });
-                            },
-                          });
-                          swipeActionRef.current?.close();
-                        },
-                      },
-                    ]
-                  : []
-              }
-            >
-              <List.Item
+      <PullToRefresh onRefresh={() => getContactsList()}>
+        <List header={<ListTitle addContact={showModal} />}>
+          {contacts.map((contact: IContact) => {
+            let isAccepted = contact.status === "accepted";
+            return (
+              <SwipeAction
+                ref={swipeActionRef}
                 key={contact.id}
-                onClick={isAccepted ? toChatWindow : () => {}}
-                arrow={
-                  isAccepted ? (
-                    <Badge content="99+" />
-                  ) : (
-                    <div>
-                      <CheckCircleOutline
-                        color="#76c6b8"
-                        onClick={() =>
-                          changeStatus(contact.account, "accepted")
-                        }
-                      />
-                      <CloseCircleOutline
-                        color="var(--adm-color-danger)"
-                        onClick={() =>
-                          changeStatus(contact.account, "rejected")
-                        }
-                      />
-                    </div>
-                  )
-                }
-                prefix={
-                  <Image
-                    src={contact.avatar}
-                    style={{ borderRadius: 20 }}
-                    fit="cover"
-                    width={40}
-                    height={40}
-                  />
-                }
-                description={
-                  isAccepted ? contact.description : "是否确认添加好友？"
+                rightActions={
+                  isAccepted
+                    ? [
+                        {
+                          key: "delete",
+                          text: "删除",
+                          color: "danger",
+                          onClick: async () => {
+                            await Dialog.confirm({
+                              content: "确定要删除该联系人吗？",
+                              onConfirm: async () => {
+                                await delContact(contact.account).then(
+                                  (res) => {
+                                    if (res === "delete successfully") {
+                                      getContactsList();
+                                      searchContactsList(searchValue);
+                                    }
+                                  }
+                                );
+                              },
+                            });
+                            swipeActionRef.current?.close();
+                          },
+                        },
+                      ]
+                    : []
                 }
               >
-                {contact.name}
-              </List.Item>
-            </SwipeAction>
-          );
-        })}
-      </List>
+                <List.Item
+                  key={contact.id}
+                  onClick={isAccepted ? toChatWindow : () => {}}
+                  arrow={
+                    isAccepted ? (
+                      <Badge
+                        content={
+                          contact.unread
+                            ? contact.unread > 99
+                              ? "99+"
+                              : contact.unread
+                            : ""
+                        }
+                      />
+                    ) : (
+                      <div>
+                        <CheckCircleOutline
+                          color="#76c6b8"
+                          onClick={() =>
+                            changeStatus(contact.account, "accepted")
+                          }
+                        />
+                        <CloseCircleOutline
+                          color="var(--adm-color-danger)"
+                          onClick={() =>
+                            changeStatus(contact.account, "rejected")
+                          }
+                        />
+                      </div>
+                    )
+                  }
+                  prefix={
+                    <Image
+                      src={contact.avatar}
+                      style={{ borderRadius: 20 }}
+                      fit="cover"
+                      width={40}
+                      height={40}
+                    />
+                  }
+                  description={
+                    isAccepted ? contact.description : "是否确认添加好友？"
+                  }
+                >
+                  {contact.name}
+                </List.Item>
+              </SwipeAction>
+            );
+          })}
+        </List>
+      </PullToRefresh>
       <Modal
         visible={isModalOpen}
         header={
@@ -224,14 +261,14 @@ const MessageApp = () => {
             placeholder="请输入账号"
             onSearch={searchContactsList}
             onChange={(val) => {
-              setsearchValue(val);
+              setSearchValue(val);
             }}
           />
         }
         title="搜索结果"
         content={
           <List>
-            {searchList.map((contact: Icontact) => {
+            {searchList.map((contact: IContact) => {
               let disabled = true;
               let icons;
               if (checkStatus(sentList, contact.account, "pending")) {

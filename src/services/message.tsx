@@ -6,7 +6,7 @@ export const getContacts = async () => {
   const account = localStorage.getItem("loggedIn");
   const data = await axios.get(`${URL_PREFIX}/getContacts`, {
     params: { account },
-  });
+  });  
   return data.data;
 };
 
