@@ -124,8 +124,8 @@ const MessageApp = () => {
     setSearchList(contactWithId);
   };
 
-  const toChatWindow = () => {
-    history.push("/home/message/chatWindow");
+  const toChatWindow = (touUser:string) => {
+    history.push(`/home/message/chatWindow/${touUser}`);
   };
 
   // 发送添加请求
@@ -203,7 +203,7 @@ const MessageApp = () => {
               >
                 <List.Item
                   key={contact.id}
-                  onClick={isAccepted ? toChatWindow : () => {}}
+                  onClick={isAccepted ? () => toChatWindow(contact.account) : () => {}}
                   arrow={
                     isAccepted ? (
                       <Badge
