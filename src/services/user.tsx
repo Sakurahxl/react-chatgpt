@@ -27,7 +27,7 @@ export const register = async (params: any) => {
   return true;
 };
 
-// 获取用户信息
+// 获取用户信息{account}
 export const getInfo = async (params: any) => {
   const data = await axios.post(`${URL_PREFIX}/search`, params);
   return data.data;

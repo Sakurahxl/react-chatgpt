@@ -6,10 +6,8 @@ import { get } from "node_modules/axios/index.cjs";
 
 //断开 重连倒计时
 let timeout: null | NodeJS.Timeout = null;
-let toUser: string;
 let chatMsg: string;
 let contactId: number;
-let websocket: WebSocket;
 let currentChatHistory = [];
 let friendsList: any[] = [];
 let hasUnread: boolean = true;
@@ -36,8 +34,6 @@ export const getChatHistory = async (toUser: string) => {
   const data = await axios.get(`${URL_PREFIX}/chat/getChatRecords/`, {
     params: { toUser, fromUser, startIndex: 0, pageSize: 10 },
   });
-  console.log(data);
-
   return data.data;
 };
 
@@ -54,18 +50,19 @@ export const getChatSatus = async (toUser: string) => {
 };
 
 // 建立websocket连接
-export const initWebSocket = () => {
+export const initWebSocket = (toUser:string) => {
+  let websocket: WebSocket;
   const target = `${URL_PREFIX_WS}/websocket`;
   //判断当前浏览器是否支持WebSocket
   if ("WebSocket" in window) {
     websocket = new WebSocket(target);
   } else {
     console.log("浏览器不支持websocket");
-    return;
+    return null;
   }
   //连接发生错误的回调方法
   websocket.onerror = () => {
-    initWebSocket();
+    initWebSocket(toUser);
     console.log("连接发生错误！尝试重新连接！");
   };
   //连接关闭的回调方法
@@ -144,59 +141,33 @@ export const initWebSocket = () => {
     var url = `${URL_PREFIX}/chat/resetWindows`;
     await axios.get(url);
   };
+
+  return websocket;
 };
 
 // 重新连接
-export const reconnect = () => {
+export const reconnect = (toUser:string) => {
   let lockReconnect = true; //避免重复连接
   //没连接上会一直重连，设置延迟避免请求过多
   timeout && clearTimeout(timeout);
   // 如果到了这里断开重连的倒计时还有值的话就清除掉
   timeout = setTimeout(() => {
     //然后新连接
-    initWebSocket();
+    initWebSocket(toUser);
     lockReconnect = false;
   }, 5000);
 };
 
-// 发送消息
-export const websocketSend = () => {
-  let content = {
-    message: chatMsg,
-    toUser: toUser,
-    contactId: contactId,
-    sendUser: getLoginStatus(),
-    sendTime: formatDate(new Date(), "yyyy-MM-dd hh:mm:ss"),
-  };
-  // 发送消息
-  websocket.send(JSON.stringify(chatMsg));
-  // 添加進去聊天历史列表
-  currentChatHistory.push(content);
 
-  // 设置上一条消息为这一条 暂时不确定 应该不需要这个
-  var index = friendsList.findIndex((item) => {
-    return item.friendName == toUser;
+
+
+export const getChatList = async () => {
+  const fromUser = getLoginStatus();
+  const data = await axios.get(`${URL_PREFIX}/chat/getChatList/`, {
+    params: { fromUser },
   });
-  // if (index != -1) {
-  //     // 说明找到了 将其的unread+1
-  //     this.$set(friendsList[index], 'lastMessage', this.msgContent);
-  // } else {
-  //     console.log('没有将这个发出去的消息设置为未读消息那里！！' + content);
-  // }
-
-  // 清空输入内容框
-  chatMsg = "";
-  // 将历史记录滚动到底部
-  scrollBottom();
+  return data.data;
 };
-
-export const getChatList= async () => {
-    const fromUser = getLoginStatus();
-    const data = await axios.get(`${URL_PREFIX}/chat/getChatList/`, {
-        params: { fromUser }
-    });
-    return data.data;
-}
 
 // // 向上滚动获取历史记录
 // scrollHistory: async function(event) {
