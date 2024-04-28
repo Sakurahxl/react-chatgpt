@@ -9,7 +9,7 @@ import {
 } from "antd-mobile";
 import styles from "./index.less";
 import { useEffect, useRef, useState } from "react";
-import { getChatHistory, initWebSocket } from "@/services/chat";
+import { getChatHistory, getContactId, initWebSocket } from "@/services/chat";
 import ReactMarkdown from "react-markdown";
 import { showMessage } from "@/pages/chatgpt";
 import remarkMath from "remark-math";
@@ -21,13 +21,14 @@ import { useParams } from "umi";
 import { formatDate } from "@/utils/datetime";
 import { getLoginStatus } from "@/services/auth";
 import { getInfo } from "@/services/user";
+import { get } from "node_modules/axios/index.cjs";
 
 type TContent = {
   message: string;
   toUser: string;
   contactId: number;
-  sendUser: string;
-  sendTime: string;
+  sendUser?: string;
+  sendTime?: string;
 };
 
 const chatWindow = () => {
@@ -47,12 +48,18 @@ const chatWindow = () => {
     websocket.current = initWebSocket(toUserParams.toUser ?? "");
     setJudgeEnvir(window.navigator.userAgent.indexOf("Html5Plus") === -1);
     getChatHistoryData();
+    getChatStatus();
     getCurrentUserInfo();
   }, []);
 
   const back = () => {
     window.history.back();
   };
+
+  const getChatStatus = async () => {
+    let data = await getContactId(toUserParams.toUser ?? "");
+    setContactId(data);
+  }
 
   const getChatHistoryData = async () => {
     let data = await getChatHistory(toUserParams.toUser ?? "");
@@ -73,11 +80,11 @@ const chatWindow = () => {
       message: value,
       toUser: toUserParams.toUser ?? "",
       contactId: contactId,
-      sendUser: getLoginStatus(),
-      sendTime: formatDate(new Date(), "yyyy-MM-dd hh:mm:ss"),
     };
     // 发送消息
     websocket.current?.send(JSON.stringify(content));
+    content.sendUser = getLoginStatus();
+    content.sendTime = formatDate(new Date(), "yyyy-MM-dd hh:mm:ss");
     // 添加進去聊天历史列表
     currentChatHistory.push(content);
     setCurrentChatHistory(currentChatHistory);

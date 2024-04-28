@@ -38,7 +38,7 @@ export const getChatHistory = async (toUser: string) => {
 };
 
 export const getChatSatus = async (toUser: string) => {
-  const data = await axios.get(`${URL_PREFIX}/chat/getChatStatus/${toUser}`);
+  const data = await axios.get(`${URL_PREFIX}/chat/inWindows/${toUser}`);
   // 建立连接的同时会把全部消息设置为已读 这个因为没有重新去请求后台，所以自己做一个就行
   let index = friendsList.findIndex((item) => {
     return item.contact == toUser;
@@ -168,6 +168,15 @@ export const getChatList = async () => {
   });
   return data.data;
 };
+
+
+export const getContactId = async (toUser: string) => {
+  const fromUser = getLoginStatus();
+  const data = await axios.get(`${URL_PREFIX}/chat/getContactId/`, {
+    params: { fromUser, toUser },
+  });
+  return data.data;
+}
 
 // // 向上滚动获取历史记录
 // scrollHistory: async function(event) {
