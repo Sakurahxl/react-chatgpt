@@ -45,11 +45,10 @@ const chatWindow = () => {
   const [toUser, seToUser] = useState({});
 
   useEffect(() => {
-    websocket.current = initWebSocket(toUserParams.toUser ?? "");
+    getCurrentUserInfo();
     setJudgeEnvir(window.navigator.userAgent.indexOf("Html5Plus") === -1);
     getChatHistoryData();
     getChatStatus();
-    getCurrentUserInfo();
   }, []);
 
   const back = () => {
@@ -59,7 +58,7 @@ const chatWindow = () => {
   const getChatStatus = async () => {
     let data = await getContactId(toUserParams.toUser ?? "");
     setContactId(data);
-  }
+  };
 
   const getChatHistoryData = async () => {
     let data = await getChatHistory(toUserParams.toUser ?? "");
@@ -70,6 +69,7 @@ const chatWindow = () => {
 
   const getCurrentUserInfo = async () => {
     let info = await getInfo({ account: getLoginStatus() });
+    websocket.current = initWebSocket(toUserParams.toUser ?? "");
     console.log(info);
     setFromUser(info);
   };

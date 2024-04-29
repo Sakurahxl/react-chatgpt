@@ -52,7 +52,7 @@ export const getChatSatus = async (toUser: string) => {
 // 建立websocket连接
 export const initWebSocket = (toUser:string) => {
   let websocket: WebSocket;
-  const target = `${URL_PREFIX_WS}/websocket`;
+  const target = `${URL_PREFIX_WS}/websocket/${getLoginStatus()}`;
   //判断当前浏览器是否支持WebSocket
   if ("WebSocket" in window) {
     websocket = new WebSocket(target);
