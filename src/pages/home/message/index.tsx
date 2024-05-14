@@ -81,15 +81,20 @@ const MessageApp = () => {
   const refresh = () => {
     timeRef.current
       ? clearInterval(timeRef.current)
-      : (timeRef.current = setInterval(() => {
-          console.log("refresh");
-          getContactsList();
-        }, 1000 * 60 * 3)); // 3 分钟刷新一次
+      : (timeRef.current = setInterval(
+          () => {
+            console.log("refresh");
+            getContactsList();
+          },
+          1000 * 60
+        )); // 1 分钟刷新一次
   };
 
   // 获取联系人列表
   const getContactsList = async () => {
     let chatList = await getChatList();
+    console.log("chatList", chatList);
+
     let contacts = await getContacts();
     const contactWithId: IContact[] = [
       ...contacts.confirmed,
@@ -124,7 +129,7 @@ const MessageApp = () => {
     setSearchList(contactWithId);
   };
 
-  const toChatWindow = (touUser:string) => {
+  const toChatWindow = (touUser: string) => {
     history.push(`/home/message/chatWindow/${touUser}`);
   };
 
@@ -203,7 +208,9 @@ const MessageApp = () => {
               >
                 <List.Item
                   key={contact.id}
-                  onClick={isAccepted ? () => toChatWindow(contact.account) : () => {}}
+                  onClick={
+                    isAccepted ? () => toChatWindow(contact.account) : () => {}
+                  }
                   arrow={
                     isAccepted ? (
                       <Badge
