@@ -11,9 +11,9 @@ import {
 } from "@/services/search";
 import { Helmet } from "umi";
 import Result from "./Result";
-import { history } from "umi";-
+import { history } from "umi";
 
-const Search: React.FC = () => {
+const Search = () => {
   const [searchValue, setSearchValue] = useState<string>("");
   const [keyword, setKeyword] = useState<string>("");
   const [words, setWords] = useState<string[]>([]);
