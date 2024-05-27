@@ -14,9 +14,10 @@ import styles from "./index.less";
 import { PictureOutline } from "antd-mobile-icons";
 import { useEffect, useState } from "react";
 import { Iuser } from "..";
-import { getLoginStatus, getPrompt, setPrompt } from "@/services/auth";
-import { getInfo, update, uploadAvatar } from "@/services/user";
+import { addExtraInfo, getExtraInfo, getInfo, update, updateExtraInfo, uploadAvatar } from "@/services/user";
 import { useLocation } from "umi";
+import system_prompt from "@/pages/chatgpt/systemPrompt";
+import { setPrompt } from "@/services/auth";
 
 let fileAdress = "";
 export async function mockUpload(file: File) {
@@ -44,19 +45,46 @@ const Setting = () => {
       url: user.avatar,
     },
   ]);
+  const [userExtra, setUserExtra] = useState<any>(null);
+
+  useEffect(() => {
+    getExtra();
+  }, []);
+
+  const getExtra = async () => {
+    let data = await getExtraInfo();
+    if (data) {
+      setUserExtra(data);
+      form.setFieldsValue({
+        phonenumber: data.phonenumber,
+        email: data.email,
+      });
+    }
+  };
+
+  const updateExtra = async () => {
+    if(userExtra) {
+      await updateExtraInfo(form.getFieldsValue().phonenumber, form.getFieldsValue().email);
+    }else {
+      await addExtraInfo(form.getFieldsValue().phonenumber, form.getFieldsValue().email);
+    }
+  };
+
+  
 
   const onSubmit = () => {
     fileList[0].url = fileAdress || fileList[0].url;
     setFileList(fileList);
     const values = form.getFieldsValue();
     console.log(values);
-    
+    updateExtra();
     update(values).then((res) => {
       if (res === "Update successfully") {
+        setPrompt(system_prompt() + values.prompt);
         Dialog.alert({
           content: <pre>{"修改成功"}</pre>,
         });
-      }else{
+      } else {
         Dialog.alert({
           content: <pre>{"修改失败"}</pre>,
         });
@@ -117,8 +145,14 @@ const Setting = () => {
           <Form.Item name="description" label="描述修改">
             <TextArea showCount maxLength={30} />
           </Form.Item>
-          <Form.Item name="prompt" label="提示词配置">
+          <Form.Item name="prompt" label="额外提示词配置">
             <TextArea showCount maxLength={500} autoSize={{ minRows: 5 }} />
+          </Form.Item>
+          <Form.Item name="phonenumber" label="手机号">
+            <Input />
+          </Form.Item>
+          <Form.Item name="email" label="电子邮箱">
+            <Input />
           </Form.Item>
         </Form>
       </div>

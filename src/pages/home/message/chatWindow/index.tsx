@@ -134,35 +134,6 @@ const chatWindow = () => {
           return [...prevChatHistory, chatContent];
         });
 
-        //   // 放进去之后 根据是否是在浏览历史记录 来做不同的处理
-        //   this.$nextTick(() => {
-        //     var container = this.$el.querySelector("#chatContainer");
-        //     if (isScanHistory) {
-        //       // 表示在查看历史记录  显示按钮  并保持不动
-        //       container.scrollTop =
-        //         container.scrollHeight - container.offsetHeight - scBottom;
-        //       this.hasUnread = true;
-        //     } else {
-        //       // 表示处于聊天整天 直接拉到底部
-        //       container.scrollTop = container.scrollHeight;
-        //       this.hasUnread = false;
-        //     }
-        //   });
-
-        //   设置上一条消息
-        // var index = friendsList.findIndex((item) => {
-        //   return item.friendName == toUser;
-        // });
-        // if (index != -1) {
-        //     // 说明找到了 将其的unread+1
-        //     this.$set(this.friendsList[index], 'unread', parseInt(this.friendsList[index].unread) + 1);
-        //     console.log(parseInt(this.friendsList[index].unread) + 1);
-        //     // 设置当前好友的上一条消息为这个
-        //     this.$set(this.friendsList[index], 'lastMessage', chatContent.content);
-
-        // } else {
-        //     console.log('发出去的消息经过这里了！' + chatContent);
-        // }
       }
     };
 
@@ -223,7 +194,7 @@ const chatWindow = () => {
 
   return (
     <div className={styles["chat-window"]}>
-      <NavBar onBack={back}>聊天框</NavBar>
+      <NavBar onBack={back}>{toUser.name}</NavBar>
       <div className={styles.content} ref={contentRef}>
         <List
           style={{

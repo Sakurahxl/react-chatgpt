@@ -24,6 +24,7 @@ import RecorderWeb from "./components/RecorderWeb";
 import { getInfo } from "@/services/user";
 import { getLoginStatus, getPrompt, getUnload } from "@/services/auth";
 import jumpPage from "./jumpPage";
+import { addAIChatRecord } from "@/services/aiChat";
 
 export interface ChatMessage {
   role: "system" | "user" | "assistant";
@@ -39,12 +40,6 @@ export interface showMessage {
 const demoAvatarImages = [
   "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fc-ssl.duitang.com%2Fuploads%2Fblog%2F202108%2F05%2F20210805211949_e77e4.thumb.1000_0.jpeg&refer=http%3A%2F%2Fc-ssl.duitang.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1693736807&t=673a4f17bead14824eabfa844929af8b",
 ];
-
-enum Type {
-  AUTOOLD = "/autoOld",
-  LOGIN = "/",
-  TESTPAGE = "/testPage",
-}
 
 const Chatgpt = (props: any) => {
   const textRef = useRef(null);
@@ -63,9 +58,13 @@ const Chatgpt = (props: any) => {
   const [userAvatar, setUserAvatar] = useState("");
 
   useEffect(() => {
-    getInfo({ account: getLoginStatus() }).then((res) => {
-      setUserAvatar(res.avatar??"https://img2.baidu.com/it/u=372601434,3534902205&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500");
-    });
+    // getInfo({ account: getLoginStatus() }).then((res) => {
+    //   setUserAvatar(res.avatar??"https://img2.baidu.com/it/u=372601434,3534902205&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500");
+    // });
+    setUserAvatar(
+      sessionStorage.getItem("userAvatar") ??
+        "https://img2.baidu.com/it/u=372601434,3534902205&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500"
+    );
   }, []);
 
   //放入提示词
@@ -131,6 +130,7 @@ const Chatgpt = (props: any) => {
     //第一条系统提示词不清除
     setMessageList(messageList.slice(0, 1));
     setShowList([]);
+    addAIChatRecord(JSON.stringify(messageList));
   };
 
   //清空文本框
@@ -179,8 +179,7 @@ const Chatgpt = (props: any) => {
       Toast.show("5s后即将跳转到" + url + "页面");
       setTimeout(() => {
         jumpPage.filter((item) => {
-          item.name === url;
-          return history.push(item.path);
+          if (item.name === url) return history.push(item.path);
         });
       }, 5000);
     }

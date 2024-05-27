@@ -3,6 +3,7 @@ import styles from "./index.less";
 import Header from "../components/Header";
 import storage, { ViewHistory } from "@/utils/storage";
 import { formatDate } from "@/utils/datetime";
+import { getViewRecord } from "@/services/history";
 
 const TodoApp = () => {
   const [histories, setHistories] = useState<Array<[string, ViewHistory[]]>>(
@@ -11,7 +12,10 @@ const TodoApp = () => {
 
   useEffect(() => {
     const viewHistories = storage.getViewHistory();
-    
+    getViewRecord().then((result: any) => {
+      console.log("history",result);
+    });
+
     // 按点击时间排序
     viewHistories.sort(
       (a: { viewAt: number }, b: { viewAt: number }) => b.viewAt - a.viewAt
@@ -84,7 +88,7 @@ const TodoApp = () => {
   return (
     <div className={styles.todo}>
       {/* 图片不显示加入下行代码，跳过安全url认证 */}
-      <meta name="referrer" content="no-referrer"/>
+      <meta name="referrer" content="no-referrer" />
       <div className={styles["top-wrapper"]}>
         <Header display={true} />
       </div>
@@ -97,7 +101,7 @@ const TodoApp = () => {
               <div className={styles["item-wrapper"]} key={history.aId}>
                 <a href={"#/home/video/av" + history.aId}>
                   <div className={styles["img-container"]}>
-                    <img src={history.pic}/>
+                    <img src={history.pic} />
                   </div>
                   <div className={styles.info}>
                     <div className={styles.title}>{history.title}</div>

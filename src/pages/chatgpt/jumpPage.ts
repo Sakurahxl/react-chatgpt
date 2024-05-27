@@ -8,7 +8,7 @@ const jumpPage: IJumpPage[] = [{
     name: "适老化",
     path: "/autoOld"
 }, {
-    name: "任务清单",
+    name: "历史记录",
     path: "/home/1"
 }, {
     name: "视频",
@@ -16,7 +16,14 @@ const jumpPage: IJumpPage[] = [{
 },{
     name: "消息列表",
     path: "/home/2"
-}];
+},{
+    name: "个人信息",
+    path: "/home/3"
+}, {
+    name: "搜索",
+    path: "/search"
+}
+];
 
 export default jumpPage;
 

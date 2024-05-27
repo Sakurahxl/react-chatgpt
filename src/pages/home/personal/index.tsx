@@ -1,11 +1,12 @@
 import styles from "./index.less";
 import { Avatar, Button, Card, Col, Row } from "antd";
 import { useEffect, useRef, useState } from "react";
-import { getLoginStatus, getLogout } from "@/services/auth";
+import { getLoginStatus, getLogout, getUnload } from "@/services/auth";
 import { getInfo, logon } from "@/services/user";
 import { useNavigate } from "umi";
 import system_prompt from "@/pages/chatgpt/systemPrompt";
 import { Modal, Input } from "antd-mobile";
+import { history } from "umi";
 
 export interface Iuser {
   avatar: string;
@@ -23,8 +24,13 @@ const Personal = () => {
     prompt: "",
   });
   const navigator = useNavigate();
+
   useEffect(() => {
     personalRef.current.scrollIntoView(true);
+    getUserInfo();
+  }, []);
+
+  const getUserInfo = () => {
     getInfo({ account: getLoginStatus() }).then((res) => {
       setUser({
         avatar:
@@ -32,10 +38,10 @@ const Personal = () => {
           "https://img2.baidu.com/it/u=372601434,3534902205&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500",
         name: res.name,
         description: res.description ?? "自我描述",
-        prompt: res.prompt ?? system_prompt,
+        prompt: res.prompt,
       });
     });
-  }, []);
+  };
 
   const setting = () => {
     navigator("/home/personal/setting", {
@@ -50,9 +56,11 @@ const Personal = () => {
     Modal.confirm({
       content: (
         <>
-          <h6 className={styles['confirm-title']}>注销账号后，您的账号将无法再次登录，是否继续？</h6>
+          <h6 className={styles["confirm-title"]}>
+            注销账号后，您的账号将无法再次登录，是否继续？
+          </h6>
           <div>
-            <span className={styles['confirm-content']}>确认密码</span>
+            <span className={styles["confirm-content"]}>确认密码</span>
             <Input
               placeholder="请输入密码"
               clearable
@@ -98,7 +106,13 @@ const Personal = () => {
         </Card>
         <Card className={styles.card} style={{ minHeight: "400px" }}>
           <div>
-            <h3>ai客服助手个性化词</h3>
+            <h3>ai客服基础配置词</h3>
+            <p>{system_prompt()}</p>
+          </div>
+        </Card>
+        <Card className={styles.card} style={{ minHeight: "100px" }}>
+          <div>
+            <h3>ai客服个性化词</h3>
             <p>{user.prompt}</p>
           </div>
         </Card>
@@ -108,6 +122,7 @@ const Personal = () => {
               type="primary"
               shape="round"
               style={{ width: "100%", marginBottom: "20px" }}
+              onClick={() => {history.push("/home/message/chatWindow/")}}
             >
               联系人工客服
             </Button>

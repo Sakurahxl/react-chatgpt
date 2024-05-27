@@ -28,9 +28,9 @@ export function setPrompt(prompt:string) {
 export function getPrompt() {
     const prompt = localStorage.getItem('prompt');
     if (!prompt) {
-        setPrompt(system_prompt);
+        setPrompt(system_prompt());
     }
-    return prompt || system_prompt;
+    return prompt || system_prompt();
 }
 
 // 组件状态

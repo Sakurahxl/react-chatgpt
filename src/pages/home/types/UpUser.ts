@@ -1,7 +1,10 @@
+import { ReactNode } from "react";
+
 /**
  * up主
  */
 class UpUser {
+  videoCount?: ReactNode;
   constructor(
     public mId: number,
     public name: string,

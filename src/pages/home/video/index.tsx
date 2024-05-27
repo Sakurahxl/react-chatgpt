@@ -15,9 +15,12 @@ import { UpUser } from "../types/UpUser";
 import { formatDate } from "@/utils/datetime";
 import { context } from "@/services/context";
 import storage from "@/utils/storage";
-import { Avatar, NavBar } from "antd-mobile";
-import { FloatButton, message } from "antd";
+import { Avatar, Divider, NavBar, TextArea } from "antd-mobile";
+import { Button, FloatButton, message } from "antd";
 import { Image } from "antd-mobile";
+import { getReviews, sendReview } from "@/services/review";
+import { get } from "node_modules/axios/index.cjs";
+import { addViewRecord } from "@/services/history";
 
 interface DetailState {
   loading: boolean;
@@ -41,15 +44,17 @@ const VideoDetail = () => {
     comments: [],
   });
   const [aId, setAId] = useState<number>(Number(params.aId?.slice(2)) || 0);
+  const [review, setReview] = useState<string>("");
+  const [reviewList, setReviewList] = useState<any>([]);
   useEffect(() => {
     // 不存在视频返回首页
     if (aId === 0) {
       toHome();
       return;
-    } 
+    }
     getVideoDetail(aId).then((res: Video | null) => {
       // 找不到视频返回首页
-      if (res===null) {
+      if (res === null) {
         toHome();
         return;
       }
@@ -64,9 +69,11 @@ const VideoDetail = () => {
         viewAt: new Date().getTime(),
       });
     });
+    getReview();
     getRecommentVideos(aId);
+    addViewRecord(aId + "");
   }, []);
-  
+
   useEffect(() => {
     if (Number(params.aId?.slice(2)) !== aId) {
       location.reload();
@@ -76,14 +83,13 @@ const VideoDetail = () => {
   useEffect(() => {}, [video]);
   useEffect(() => {}, [control]);
 
-
   // 返回首页
   const toHome = () => {
     history.push({
       pathname: "/home",
     });
     message.error("视频不存在");
-  }
+  };
   /**
    * 展开或隐藏全部信息
    */
@@ -221,6 +227,30 @@ const VideoDetail = () => {
     });
   };
 
+  const send = async () => {
+    // 发送评论
+    await sendReview(review, aId.toString());
+    setReview("");
+    await getReview();
+  };
+
+  const getReview = async () => {
+    let data = await getReviews(aId + "");
+    data = data
+      ?.filter((item: any) => {
+        return item.aid === aId + "";
+      })
+      .map((item: any) => {
+        return {
+          content: item.content,
+          createTime: formatDate(new Date(item.createTime), "yyyy-MM-dd hh:mm"),
+          name: item.name,
+          Avatar: item.avatar,
+        };
+      });
+    setReviewList(data);
+  };
+
   return (
     <div className="video-detail">
       <div className={styles["top-wrapper"]}>
@@ -230,7 +260,7 @@ const VideoDetail = () => {
           }}
           style={{ backgroundColor: "white" }}
         >
-          <Header display={false}/>
+          <Header display={false} />
         </NavBar>
       </div>
       {/* 内容 */}
@@ -296,7 +326,11 @@ const VideoDetail = () => {
                 }}
               >
                 <div className={styles["image-container"]}>
-                  <Image src={getPicUrl(v.pic, "@320w_200h")} alt={v.title} lazy/>
+                  <Image
+                    src={getPicUrl(v.pic, "@320w_200h")}
+                    alt={v.title}
+                    lazy
+                  />
                   <div className={styles.duration}>
                     {formatDuration(v.duration, "0#:##:##")}
                   </div>
@@ -305,10 +339,10 @@ const VideoDetail = () => {
                   <div className={styles.title}>{v.title}</div>
                   <div className={styles["up-user"]}>
                     <span
-                      onClick={(e) => {
-                        e.preventDefault();
-                        toSpace(v?.owner?.mId || 0);
-                      }}
+                    // onClick={(e) => {
+                    //   e.preventDefault();
+                    //   toSpace(v?.owner?.mId || 0);
+                    // }}
                     >
                       {v?.owner?.name}
                     </span>
@@ -326,30 +360,56 @@ const VideoDetail = () => {
             <div className={styles.loading}>加载中...</div>
           ) : null}
         </div>
+        <div className={styles.review}>
+          <Divider contentPosition="left">留下你的评论</Divider>
+          <div>
+            <TextArea
+              onChange={(value) => setReview(value)}
+              showCount
+              maxLength={30}
+              value={review}
+            />
+            <Button size="small" color='primary' onClick={send}>
+              发送
+            </Button>
+          </div>
+        </div>
         {control.comments.length > 0 ? (
           <div className={styles.comment}>
             <div className={styles["comment-title"]}>
               评论
               <span className={styles["comment-count"]}>
-                (&nbsp;{commentPage.current.count}&nbsp;)
+                (&nbsp;{commentPage.current.count + reviewList.length}&nbsp;)
               </span>
             </div>
             <div className={styles["comment-list"]}>
+              {reviewList.map((item: any, index: number) => {
+                return (
+                  <div className={styles["comment-wrapper"]} key={index}>
+                    <div className={styles["comment-up-pic"]}>
+                      <Image src={item.Avatar} alt={item.name} lazy />
+                    </div>
+                    <span className={styles["comment-time"]}>
+                      {item.createTime}
+                    </span>
+                    <div className={styles["comment-up-user"]}>{item.name}</div>
+                    <div className={styles["comment-content"]}>
+                      {item.content}
+                    </div>
+                  </div>
+                );
+              })}
               {control.comments.map((comment: any, i: string) => (
                 <div className={styles["comment-wrapper"]} key={i}>
-                  {/* <Link to={"/space/" + comment.user.mId}> */}
-                    <Image
-                      className={styles["comment-up-pic"]}
-                      src={getPicUrl(comment.user.face, "@60w_60h")}
-                      alt={comment.user.name}
-                      lazy
-                    />
-                  {/* </Link> */}
+                  <Image
+                    className={styles["comment-up-pic"]}
+                    src={getPicUrl(comment.user.face, "@60w_60h")}
+                    alt={comment.user.name}
+                    lazy
+                  />
                   <span className={styles["comment-time"]}>{comment.date}</span>
                   <div className={styles["comment-up-user"]}>
-                    {/* <Link to={"/space/" + comment.user.mId}> */}
-                      {comment.user.name}
-                    {/* </Link> */}
+                    {comment.user.name}
                   </div>
                   <div className={styles["comment-content"]}>
                     {comment.content}

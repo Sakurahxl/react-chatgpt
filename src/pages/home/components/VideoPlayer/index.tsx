@@ -5,7 +5,6 @@ import { formatDuration } from "@/utils/string";
 import loading from "@/assets/loading.svg";
 import { context } from "@/services/context";
 import Hls from "hls.js";
-import { Video } from "../../types/Video";
 import { getBarragesList } from "@/services/home";
 import useSetState from "ahooks/lib/useSetState";
 
@@ -73,8 +72,7 @@ const VideoPlayer = (props: any) => {
     initVideo();
   }, []);
 
-  useEffect(() => {
-  }, [control]);
+  useEffect(() => {}, [control]);
 
   const getVideoUrl = (url: string) => {
     const { videoURL } = context;
@@ -95,7 +93,7 @@ const VideoPlayer = (props: any) => {
     const progressDOM = progressRef.current;
 
     const play = () => {
-      setControl((prev)=>({
+      setControl((prev) => ({
         isShowCover: false,
         paused: false,
         waiting: false,
@@ -109,18 +107,17 @@ const VideoPlayer = (props: any) => {
     videoDOM.addEventListener("playing", play);
 
     videoDOM.addEventListener("waiting", () => {
-      setControl((prev)=>({
+      setControl((prev) => ({
         waiting: true,
-      }))
+      }));
     });
 
     // 非直播时处理
     if (live.live === false) {
       getBarrages();
       videoDOM.addEventListener("timeupdate", () => {
-        
         if (control.duration === 0) {
-          setControl((prev)=>({
+          setControl((prev) => ({
             duration: videoDOM.duration,
           }));
         }
@@ -143,7 +140,7 @@ const VideoPlayer = (props: any) => {
       videoDOM.addEventListener("ended", () => {
         currentTimeDOM.innerHTML = "00:00";
         progressDOM.style.width = "0";
-        setControl((prev)=>({
+        setControl((prev) => ({
           paused: false,
           isShowControlBar: false,
           isShowPlayBtn: false,
@@ -214,7 +211,7 @@ const VideoPlayer = (props: any) => {
           videoDOM.play();
         });
         videoDOM.addEventListener("error", () => {
-          setControl((prev)=>({
+          setControl((prev) => ({
             isLive: false,
           }));
         });
@@ -231,7 +228,7 @@ const VideoPlayer = (props: any) => {
               data.type === Hls.ErrorTypes.NETWORK_ERROR ||
               data.response?.code === 404
             ) {
-              setControl((prev)=>({
+              setControl((prev) => ({
                 isLive: false,
               }));
             }
@@ -290,12 +287,12 @@ const VideoPlayer = (props: any) => {
    */
   const showOrHideControls = () => {
     if (control.isShowControlBar === true) {
-      setControl((prev)=>({
+      setControl((prev) => ({
         isShowControlBar: false,
         isShowPlayBtn: false,
       }));
     } else {
-      setControl((prev)=>({
+      setControl((prev) => ({
         isShowControlBar: true,
         isShowPlayBtn: true,
       }));
@@ -309,7 +306,7 @@ const VideoPlayer = (props: any) => {
     const videoDOM = videoRef.current;
     if (control.paused === true) {
       videoDOM.play();
-      setControl((prev)=>({
+      setControl((prev) => ({
         paused: false,
         isShowPlayBtn: true,
         finish: false,
@@ -324,7 +321,7 @@ const VideoPlayer = (props: any) => {
       // 3秒后播放按钮显示如果显示则隐藏
       setTimeout(() => {
         if (temp.isShowPlayBtn === true) {
-          setControl((prev)=>({
+          setControl((prev) => ({
             isShowControlBar: false,
             isShowPlayBtn: false,
           }));
@@ -332,7 +329,7 @@ const VideoPlayer = (props: any) => {
       }, 3000);
     } else {
       videoDOM.pause();
-      setControl((prev)=>({
+      setControl((prev) => ({
         paused: true,
       }));
     }
@@ -349,13 +346,13 @@ const VideoPlayer = (props: any) => {
     const videoDOM = videoRef.current;
     videoDOM.currentTime = videoDOM.duration * progress;
     videoDOM.play();
-    setControl((prev)=>({
+    setControl((prev) => ({
       isShowControlBar: false,
     }));
 
     setTimeout(() => {
       if (control.isShowPlayBtn === true) {
-        setControl((prev)=>({
+        setControl((prev) => ({
           isShowPlayBtn: false,
         }));
       }
@@ -373,11 +370,11 @@ const VideoPlayer = (props: any) => {
   const onOrOff = () => {
     if (control.barrageSwitch === true) {
       barrageRef.current.clear();
-      setControl((prev)=>({
+      setControl((prev) => ({
         barrageSwitch: false,
       }));
     } else {
-      setControl((prev)=>({
+      setControl((prev) => ({
         barrageSwitch: true,
       }));
     }
@@ -388,13 +385,13 @@ const VideoPlayer = (props: any) => {
    */
   const entryOrExitFullscreen = () => {
     if (control.fullscreen === true) {
-      setControl((prev)=>({
+      setControl((prev) => ({
         isShowControlBar: false,
         isShowPlayBtn: false,
         fullscreen: false,
       }));
     } else {
-      setControl((prev)=>({
+      setControl((prev) => ({
         isShowControlBar: false,
         isShowPlayBtn: false,
         fullscreen: true,

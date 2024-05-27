@@ -63,6 +63,8 @@ const Barrage = (props: BarrageProps, ref: any) => {
     contentHeight.current = div.offsetHeight;
     body.removeChild(div);
     const { barrages } = props;
+    console.log("a",barrages);
+    
     if (barrages) {
       for (const barrage of barrages) {
         send(barrage);

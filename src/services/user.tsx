@@ -30,6 +30,8 @@ export const register = async (params: any) => {
 // 获取用户信息{account}
 export const getInfo = async (params: any) => {
   const data = await axios.post(`${URL_PREFIX}/search`, params);
+  sessionStorage.setItem("userAvatar", data.data.avatar);
+  sessionStorage.setItem("userName", data.data.name);
   return data.data;
 };
 
@@ -50,8 +52,46 @@ export const update = async (params: any) => {
     name: params.name,
     avatar: params.avatar[0].url,
     description: params.description,
-    prompt: params.sPrompt,
+    prompt: params.prompt,
   };
   const data = await axios.post(`${URL_PREFIX}/update`, user);
+  return data.data;
+};
+
+// 获取用户额外信息
+export const getExtraInfo = async () => {
+  const account = localStorage.getItem("loggedIn");
+  const data = await axios.get(`${URL_PREFIX}/getExtraInfo?account=${account}`);
+  return data.data;
+};
+
+// 更新用户额外信息
+export const updateExtraInfo = async (phonenumber:string,email:string) => {
+  let extraInfo = {
+    account: localStorage.getItem("loggedIn"),
+    phonenumber: phonenumber,
+    email: email,
+  };
+  const data = await axios.post(`${URL_PREFIX}/updateExtraInfo`, extraInfo, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  return data.data;
+};
+
+
+// 添加用户额外信息
+export const addExtraInfo = async (phonenumber:string,email:string) => {
+  let extraInfo = {
+    account: localStorage.getItem("loggedIn"),
+    phonenumber: phonenumber,
+    email: email,
+  };
+  const data = await axios.post(`${URL_PREFIX}/addExtraInfo`, extraInfo, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
   return data.data;
 };

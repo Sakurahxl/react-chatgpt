@@ -27,7 +27,7 @@ export function formatTenThousand(num: number): string {
  * ##:##:## => 0:02:00
  */
 export function formatDuration(second: number, format: string): string {
-  let date:any = new Date();
+  let date: any = new Date();
   date = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0);
   const tempstamp = date.getTime() + second * 1000;
   const newDate = new Date(tempstamp);
@@ -35,20 +35,30 @@ export function formatDuration(second: number, format: string): string {
   const minutes = newDate.getMinutes();
   const seconds = newDate.getSeconds();
   date = null;
-  const toStr = (num:number) => {
+  const toStr = (num: number) => {
     return num < 10 ? "0" + num : num;
   }
-  let duration:any = `${toStr(hours)}:${toStr(minutes)}:${toStr(seconds)}`;
+  let duration: any = `${toStr(hours)}:${toStr(minutes)}:${toStr(seconds)}`;
   if (format) {
     const formats = format.split(":");
+    let match;
+
     if (formats.length === 3) {
-      duration = duration.match(/\d{2}:\d{2}:\d{2}$/)[0];
+      match = duration?.match(/\d{2}:\d{2}:\d{2}$/);
+      if (match) {
+        duration = match[0];
+      }
     } else if (formats.length === 2) {
-      duration = duration.match(/\d{2}:\d{2}$/)[0];
+      match = duration?.match(/\d{2}:\d{2}$/);
+      if (match) {
+        duration = match[0];
+      }
     }
-    if (format.indexOf("0") === -1) {
+
+    if (format.indexOf("0") === -1 && duration) {
       duration = duration.replace(duration.charAt(0), "");
     }
   }
+
   return duration;
 }
