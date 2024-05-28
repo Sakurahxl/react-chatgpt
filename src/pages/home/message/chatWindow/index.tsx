@@ -15,20 +15,14 @@ import {
   getContactId,
   isFirstChat,
 } from "@/services/chat";
-import ReactMarkdown from "react-markdown";
-import { showMessage } from "@/pages/chatgpt";
-import remarkMath from "remark-math";
-import remarkGfm from "remark-gfm";
-import rehypeKatex from "rehype-katex";
 import facesImg from "@/assets/faces.png";
 import photoImg from "@/assets/photo.png";
 import { useParams } from "umi";
 import { formatDate } from "@/utils/datetime";
 import { getLoginStatus } from "@/services/auth";
 import { getInfo } from "@/services/user";
-import { get } from "node_modules/axios/index.cjs";
-import { URL_PREFIX, URL_PREFIX_WS } from "@/services/config";
-import axios from "@/utils/axios";
+import { URL_PREFIX_WS } from "@/services/config";
+import kefu from "@/assets/kefu.png";
 
 type TContent = {
   message: string;
@@ -72,7 +66,22 @@ const chatWindow = () => {
   };
 
   const checkIsFirstChat = async () => {
-    let data = await isFirstChat(toUserParams.toUser ?? "");
+    if (!toUserParams.toUser) {
+      let fromUser = await getInfo({ account: getLoginStatus() });
+      setFromUser(fromUser);
+      setToUser({ name: "人工客服", avatar: kefu });
+      setCurrentChatHistory([
+        {
+          message: "欢迎来到人工客服，有什么问题可以问我哦！",
+          sendUser: "",
+          sendTime: formatDate(new Date(), "yyyy-MM-dd hh:mm:ss"),
+          toUser: getLoginStatus(),
+          contactId: 0,
+        },
+      ]);
+      return;
+    }
+    let data = await isFirstChat(toUserParams.toUser);
     // 如果不是第一次聊天为1
     if (data === 1) {
       getCurrentUserInfo();
@@ -133,7 +142,6 @@ const chatWindow = () => {
           // 在这里处理接收到的消息，并返回新的聊天历史数组
           return [...prevChatHistory, chatContent];
         });
-
       }
     };
 
@@ -175,8 +183,10 @@ const chatWindow = () => {
       contactId: contactId,
       sendTime: new Date().toISOString(),
     };
-    // 发送消息
-    websocket.current?.send(JSON.stringify(content));
+    if (toUserParams.toUser) {
+      // 发送消息
+      websocket.current?.send(JSON.stringify(content));
+    }
     content.sendUser = getLoginStatus();
     content.sendTime = formatDate(new Date(), "yyyy-MM-dd hh:mm:ss");
     // 添加進去聊天历史列表
@@ -207,7 +217,7 @@ const chatWindow = () => {
             let timeDom = (
               <div className={styles["message-time"]}>{item.sendTime}</div>
             );
-            if (item.sendUser === toUserParams.toUser) {
+            if (item.sendUser === toUserParams.toUser || (!toUserParams.toUser && !item.sendUser)) {
               return (
                 <Fragment key={index}>
                   {timeDom}
