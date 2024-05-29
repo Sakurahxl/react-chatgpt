@@ -3,26 +3,26 @@
     padding: 10px;
   }
 
+
   .words {
-    padding: 3%;
-    padding-bottom: 5%;
     .wordTitle {
       margin-top: 0.8rem;
       color: #999999;
-      font-size: 0.7rem;
+      font-size: 16px;
+      margin-left: 1vw;
     }
 
     .wordWrapper {
-      height: 4.8rem;
+      height: 18vh;
       overflow: hidden;
 
       .wordItem {
         float: left;
-        padding: 0.47rem 0.6rem;
+        padding: 10px;
         margin-top: 0.6rem;
-        margin-right: 0.426rem;
+        margin-left: 1vw;
         color: #505050;
-        font-size: 0.65rem;
+        font-size: 16px;
         line-height: 0.65rem;
         text-align: center;
         border: 0.05rem solid #cccccc;
@@ -33,13 +33,12 @@
 
   .suggest {
     position: absolute;
-    top: 10vh;
-    left: 0;
-    right: 0;
+    top: 5vh;
+    left: 1vw;
+    right: 6vw;
     z-index: 1;
-    padding-top: 1vh;
-    padding-left: 0.625rem;
-    min-height: 100%;
+    padding: 1vh 2vw;
+    min-height: 60vh;
     box-sizing: border-box;
     background-color: #f4f4f4;
 
@@ -52,7 +51,7 @@
         width: 75%;
         margin: 0;
         color: #212121;
-        font-size: 13px;
+        font-size: 16px;
         overflow: hidden;
 
         .suggest_high_light {
@@ -69,7 +68,7 @@
     .historyTitle {
       margin-left: 0.625rem;
       color: #999999;
-      font-size: 0.7rem;
+      font-size: 16px;
       line-height: 2.3rem;
     }
 
@@ -77,23 +76,23 @@
       margin-left: 0.625rem;
 
       .historyItem {
-        height: 2.2rem;
+        height: 5vh;
         border-bottom: 1px solid #cccccc;
 
         .historyIco {
           float: left;
-          width: 0.8rem;
-          height: 0.8rem;
+          width: 2vw;
+          height: 3vh;
           margin-top: 0.7rem;
           background-image: url("../../assets/history.png");
           background-size: 100% 100%;
         }
 
         .name {
-          width: 14rem;
-          line-height: 2.2rem;
-          margin-left: 1.25rem;
-          font-size: 0.7rem;
+          width: 92vw;
+          line-height: 5vh;
+          margin-left: 3vw;
+          font-size: 16px;
           color: #505050;
           overflow: hidden;
         }
@@ -103,7 +102,7 @@
     .historyClear {
       text-align: center;
       color: #999999;
-      font-size: 0.7rem;
+      font-size: 16px;
       line-height: 2.3rem;
     }
   }
@@ -115,6 +114,123 @@
     bottom: 0;
     width: 100%;
     padding-top: 0.2rem;
+  }
+
+  @media screen and (max-width: 768px) {
+    .words {
+      padding: 3%;
+      padding-bottom: 5%;
+
+      .wordTitle {
+        margin-top: 0.8rem;
+        color: #999999;
+        font-size: 0.7rem;
+      }
+
+      .wordWrapper {
+        height: 4.8rem;
+        overflow: hidden;
+
+        .wordItem {
+          float: left;
+          padding: 0.47rem 0.6rem;
+          margin-top: 0.6rem;
+          margin-right: 0.426rem;
+          color: #505050;
+          font-size: 0.65rem;
+          line-height: 0.65rem;
+          text-align: center;
+          border: 0.05rem solid #cccccc;
+          border-radius: 0.8rem;
+        }
+      }
+    }
+
+    .suggest {
+      position: absolute;
+      top: 10vh;
+      left: 0;
+      right: 0;
+      z-index: 1;
+      padding-top: 1vh;
+      padding-left: 0.625rem;
+      min-height: 100%;
+      box-sizing: border-box;
+      background-color: #f4f4f4;
+
+      .suggestItem {
+        height: 2.2rem;
+        line-height: 2.2rem;
+        border-bottom: 1px solid #cccccc;
+
+        p {
+          width: 75%;
+          margin: 0;
+          color: #212121;
+          font-size: 13px;
+          overflow: hidden;
+
+          .suggest_high_light {
+            font-style: normal;
+            color: #fb7299;
+          }
+        }
+      }
+    }
+
+    .history {
+      border-top: 0.5rem solid #f4f4f4;
+
+      .historyTitle {
+        margin-left: 0.625rem;
+        color: #999999;
+        font-size: 0.7rem;
+        line-height: 2.3rem;
+      }
+
+      .historyList {
+        margin-left: 0.625rem;
+
+        .historyItem {
+          height: 2.2rem;
+          border-bottom: 1px solid #cccccc;
+
+          .historyIco {
+            float: left;
+            width: 0.8rem;
+            height: 0.8rem;
+            margin-top: 0.7rem;
+            background-image: url("../../assets/history.png");
+            background-size: 100% 100%;
+          }
+
+          .name {
+            width: 14rem;
+            line-height: 2.2rem;
+            margin-left: 1.25rem;
+            font-size: 0.7rem;
+            color: #505050;
+            overflow: hidden;
+          }
+        }
+      }
+
+      .historyClear {
+        text-align: center;
+        color: #999999;
+        font-size: 0.7rem;
+        line-height: 2.3rem;
+      }
+    }
+
+    .searchResult {
+      position: absolute;
+      top: 6.5vh;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      padding-top: 0.2rem;
+    }
   }
 
   input::-webkit-search-decoration,

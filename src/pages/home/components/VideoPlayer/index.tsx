@@ -45,6 +45,8 @@ const VideoPlayer = (props: any) => {
   const [live, setLive] = useState(defaultProps);
   const [initBarrages, setInitBarrages] = useState([]);
   const [barrages, setBarrages] = useState([]);
+  //true为电脑端，false为手机端
+  const [judgeEnvir, setJudgeEnvir] = useState(true);
   const videoRef = useRef<any>();
   // 弹幕ref
   const barrageRef = useRef<any>();
@@ -87,6 +89,7 @@ const VideoPlayer = (props: any) => {
   };
 
   const initVideo = () => {
+    setJudgeEnvir(window.navigator.userAgent.indexOf("Html5Plus") === -1);
     const barrageComponent = barrageRef.current;
     const videoDOM = videoRef.current;
     const currentTimeDOM = currentTimeRef.current;
@@ -132,6 +135,8 @@ const VideoPlayer = (props: any) => {
           const barrages = findBarrages(videoDOM.currentTime);
           barrages.forEach((barrage: any) => {
             // 发送弹幕
+            console.log(barrage);
+
             barrageComponent.send(barrage);
           });
         }
@@ -172,6 +177,7 @@ const VideoPlayer = (props: any) => {
 
         playOrPause();
       });
+
       progressDOM.addEventListener("touchmove", (e: any) => {
         e.preventDefault();
 
@@ -192,6 +198,62 @@ const VideoPlayer = (props: any) => {
 
         playOrPause();
       });
+
+      // 判断是否为电脑端,电脑端支持点击拖拽进度条
+      if (judgeEnvir) {
+        console.log("电脑端");
+        
+        progressDOM.addEventListener("mousedown", (e: any) => {
+          e.stopPropagation();
+
+          const progressWrapperDOM = progressDOM.parentElement;
+          width = progressWrapperDOM.offsetWidth;
+          left = progressWrapperDOM.getBoundingClientRect().left;
+
+          const offsetX = e.clientX - left;
+          rate = offsetX / width;
+          if (rate > 1) {
+            rate = 1;
+          } else if (rate < 0) {
+            rate = 0;
+          }
+          const currentTime = videoDOM.duration * rate;
+          progressDOM.style.width = `${rate * 100}%`;
+          currentTimeDOM.innerHTML = formatDuration(currentTime, "0#:##");
+
+          playOrPause();
+        });
+
+      //   progressDOM.addEventListener("mousedown", (e: { stopPropagation?: any; clientX?: number; }) => {
+      //     e.stopPropagation();
+      //     handleMouseDown(e);
+      //   });
+      //   const handleMouseMove = (e: { clientX: number; }) => {
+      //     if (!progressBarRef.current) return;
+
+      //     const rect = progressBarRef.current.getBoundingClientRect();
+      //     const offsetX = e.clientX - rect.left;
+      //     const width = rect.width;
+      //     let newProgress = (offsetX / width) * 100;
+
+      //     if (newProgress < 0) newProgress = 0;
+      //     if (newProgress > 100) newProgress = 100;
+
+      //     setProgress(newProgress);
+      //     if (onChange) onChange(newProgress);
+      //   };
+
+      //   const handleMouseUp = () => {
+      //     document.removeEventListener("mousemove", handleMouseMove);
+      //     document.removeEventListener("mouseup", handleMouseUp);
+      //   };
+
+      //   const handleMouseDown = (e: { clientX: number; }) => {
+      //     handleMouseMove(e);
+      //     document.addEventListener("mousemove", handleMouseMove);
+      //     document.addEventListener("mouseup", handleMouseUp);
+      //   };
+      }
     } else {
       // 直播时处理
       if (live.liveTime) {

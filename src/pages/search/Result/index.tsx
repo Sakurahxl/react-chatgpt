@@ -250,12 +250,10 @@ const Result: React.FC<ResultProps> = ({ keyword }) => {
             <div className={style.upUserWrapper} key={user.mId}>
               <a href={`/space/${user.mId}`}>
                 <div className={style.face}>
-                  {/* <LazyLoad height="3rem"> */}
                   <img
                     src={getPicUrl("https:" + user.face, "@120w_120h")}
                     alt={user.name}
-                  />
-                  {/* </LazyLoad> */}
+                  /> 
                 </div>
                 <div className={style.upInfo}>
                   <div className={style.name}>{user.name}</div>

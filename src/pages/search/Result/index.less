@@ -1,7 +1,288 @@
 .resultContainer {
-    min-height: 100%;
-    background-color: #f4f4f4;
-  
+  min-height: 100%;
+  background-color: #f4f4f4;
+
+
+  .tabContainer {
+    position: sticky;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    height: 2.2rem;
+    padding: 0 .625rem;
+    background-color: #ffffff;
+    box-sizing: border-box;
+    z-index: 1;
+
+
+    .tabItem {
+      flex: 1;
+      text-align: center;
+
+      .item {
+        position: relative;
+        display: inline-block;
+        padding: 0.2vh 20vw;
+        line-height: 4vh;
+        font-size: 22px;
+        color: #757575;
+
+        &.current {
+          color: #fb7299;
+
+          &:after {
+            position: absolute;
+            left: 0;
+            bottom: 0.3rem;
+            content: "";
+            width: 100%;
+            border-bottom: 2px solid #fb7299;
+          }
+        }
+      }
+    }
+  }
+
+  .resultWrapper {
+
+    .subTab {
+      display: flex;
+      height: 6vh;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 1.1rem;
+      background-color: #f9f9f9;
+
+      .sort {
+        font-size: 18px;
+        color: #757575;
+
+        &.current {
+          color: #fb7299;
+        }
+      }
+    }
+
+    .videoList {
+      padding: .45rem .625rem;
+
+      .videoWrapper {
+        position: relative;
+        height: 14vh;
+        margin-top: .9rem;
+        overflow: hidden;
+
+        &:first-child {
+          margin-top: 0;
+        }
+
+        .imageContainer {
+          position: relative;
+          float: left;
+          width: 20vh;
+          height: 100%;
+          border-radius: .3rem;
+          overflow: hidden;
+          background-color: #e7e7e7;
+          background-image: url('../../../assets/tv.png');
+          background-size: 3.654rem 3.654rem;
+          background-position: 1.1rem 0;
+          background-repeat: no-repeat;
+
+          img {
+            width: 100%;
+            height: 100%;
+          }
+
+          .duration {
+            position: absolute;
+            right: .2rem;
+            bottom: .2rem;
+            padding: 5px;
+            font-size: 15px;
+            line-height: .75rem;
+            color: #ffffff;
+            border-radius: 2px;
+            background-color: rgba(0, 0, 0, 0.3);
+          }
+        }
+
+        .infoWrapper {
+          position: absolute;
+          left: 15vw;
+
+          p {
+            margin: 0;
+            height: 1.6rem;
+            line-height: 3vh;
+            overflow: hidden;
+            text-align: left;
+            font-size: 20px;
+            color: #212121;
+            letter-spacing: 0;
+            word-break: break-all;
+
+            .keyword {
+              font-style: normal;
+              color: #fb7299;
+            }
+          }
+
+          .ownerWrapper {
+            margin-top: 2vh;
+            height: 1.1rem;
+            line-height: 1.1rem;
+
+            .iconUp {
+              display: inline-block;
+              width: 3vh;
+              height: 2vw;
+              background-image: url('../../../assets/ico-up.png');
+              background-size: 100% 100%;
+              background-position: center center;
+              vertical-align: middle;
+            }
+
+            .owner {
+              font-size: 18px;
+              color: #999999;
+              margin-left: .3rem;
+              vertical-align: middle;
+            }
+          }
+
+          .countInfo {
+            margin-top: 4vh;
+            color: #999999;
+            font-size: 0;
+
+            span {
+              display: inline-block;
+              vertical-align: middle;
+            }
+
+            .iconPlay,
+            .iconBarrage {
+              width: 3vh;
+              height: 2vw;
+              background-size: 100% 100%;
+              background-position: center center;
+            }
+
+            .iconPlay {
+              background-image: url('../../../assets/ico-play.png');
+            }
+
+            .iconBarrage {
+              margin-left: 4vw;
+              background-image: url('../../../assets/ico-danmu.png');
+            }
+
+            .playCount,
+            .barrageCount {
+              margin-left: .3rem;
+              width: 5vw;
+              font-size: 18px;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .upUserList {
+    padding: 2.2rem .625rem .45rem .625rem;
+
+    .upUserWrapper {
+      position: relative;
+      height: 3rem;
+      margin-top: .9rem;
+
+      a {
+        text-decoration: none;
+      }
+
+      &:first-child {
+        margin-top: .6rem;
+      }
+
+      .face {
+        float: left;
+        width: 3rem;
+        height: 3rem;
+        border-radius: 50%;
+        overflow: hidden;
+        background: url('../../../assets/noface.gif');
+        background-size: 100% 100%;
+
+        img {
+          width: 100%;
+        }
+      }
+
+      .upInfo {
+        margin-left: 3.6rem;
+
+        .name {
+          font-size: .7rem;
+          line-height: .7rem;
+          color: #212121;
+        }
+
+        .detail {
+          margin-top: .6rem;
+          font-size: .6rem;
+          line-height: .6rem;
+          color: #999999;
+
+          span:first-child {
+            display: inline-block;
+            width: 4.2rem;
+          }
+        }
+
+        .sign {
+          margin-top: .4rem;
+          height: .7rem;
+          line-height: .7rem;
+          font-size: .6rem;
+          color: #999999;
+          overflow: hidden;
+        }
+      }
+    }
+  }
+
+  .tips {
+    padding: 1rem 0;
+    text-align: center;
+
+    img {
+      display: block;
+      width: 6.5rem;
+      margin: 0 auto;
+    }
+
+    .text {
+      font-size: 18px;
+      color: #999999;
+    }
+  }
+
+  .loading {
+    position: absolute;
+    width: 100%;
+    top: 4.3rem;
+    bottom: 0;
+    padding-top: 8rem;
+    font-size: 18px;
+    text-align: center;
+    color: #999999;
+  }
+
+  @media screen and (max-width: 768px) {
     .tabContainer {
       position: sticky;
       top: 0;
@@ -14,11 +295,12 @@
       background-color: #ffffff;
       box-sizing: border-box;
       z-index: 1;
-  
+
+
       .tabItem {
         flex: 1;
         text-align: center;
-  
+
         .item {
           position: relative;
           display: inline-block;
@@ -26,10 +308,10 @@
           line-height: 2.1rem;
           font-size: .65rem;
           color: #757575;
-  
+
           &.current {
             color: #fb7299;
-  
+
             &:after {
               position: absolute;
               left: 0;
@@ -42,9 +324,9 @@
         }
       }
     }
-  
+
     .resultWrapper {
-  
+
       .subTab {
         display: flex;
         height: 2rem;
@@ -52,30 +334,30 @@
         align-items: center;
         padding: 0 1.1rem;
         background-color: #f9f9f9;
-  
+
         .sort {
           font-size: .65rem;
           color: #757575;
-  
+
           &.current {
             color: #fb7299;
           }
         }
       }
-  
+
       .videoList {
         padding: .45rem .625rem;
-  
+
         .videoWrapper {
           position: relative;
           height: 3.654rem;
           margin-top: .9rem;
           overflow: hidden;
-  
+
           &:first-child {
             margin-top: 0;
           }
-  
+
           .imageContainer {
             position: relative;
             float: left;
@@ -88,12 +370,12 @@
             background-size: 3.654rem 3.654rem;
             background-position: 1.1rem 0;
             background-repeat: no-repeat;
-  
+
             img {
               width: 100%;
               height: 100%;
             }
-  
+
             .duration {
               position: absolute;
               right: .2rem;
@@ -106,11 +388,11 @@
               background-color: rgba(0, 0, 0, 0.3);
             }
           }
-  
+
           .infoWrapper {
             position: absolute;
             left: 6.5rem;
-  
+
             p {
               margin: 0;
               height: 1.6rem;
@@ -121,18 +403,18 @@
               color: #212121;
               letter-spacing: 0;
               word-break: break-all;
-  
+
               .keyword {
                 font-style: normal;
                 color: #fb7299;
               }
             }
-  
+
             .ownerWrapper {
               margin-top: .1rem;
               height: 1.1rem;
               line-height: 1.1rem;
-  
+
               .iconUp {
                 display: inline-block;
                 width: .7rem;
@@ -142,7 +424,7 @@
                 background-position: center center;
                 vertical-align: middle;
               }
-  
+
               .owner {
                 font-size: .6rem;
                 color: #999999;
@@ -150,34 +432,36 @@
                 vertical-align: middle;
               }
             }
-  
+
             .countInfo {
               margin-top: .1rem;
               color: #999999;
               font-size: 0;
-  
+
               span {
                 display: inline-block;
                 vertical-align: middle;
               }
-  
-              .iconPlay, .iconBarrage {
+
+              .iconPlay,
+              .iconBarrage {
                 width: .7rem;
                 height: .6rem;
                 background-size: 100% 100%;
                 background-position: center center;
               }
-  
+
               .iconPlay {
                 background-image: url('../../../assets/ico-play.png');
               }
-  
+
               .iconBarrage {
                 margin-left: .75rem;
                 background-image: url('../../../assets/ico-danmu.png');
               }
-  
-              .playCount, .barrageCount {
+
+              .playCount,
+              .barrageCount {
                 margin-left: .3rem;
                 width: 2.8rem;
                 font-size: .55rem;
@@ -187,23 +471,23 @@
         }
       }
     }
-  
+
     .upUserList {
       padding: 2.2rem .625rem .45rem .625rem;
-  
+
       .upUserWrapper {
         position: relative;
         height: 3rem;
         margin-top: .9rem;
-  
+
         a {
           text-decoration: none;
         }
-  
+
         &:first-child {
           margin-top: .6rem;
         }
-  
+
         .face {
           float: left;
           width: 3rem;
@@ -212,33 +496,33 @@
           overflow: hidden;
           background: url('../../../assets/noface.gif');
           background-size: 100% 100%;
-  
+
           img {
             width: 100%;
           }
         }
-  
+
         .upInfo {
           margin-left: 3.6rem;
-  
+
           .name {
             font-size: .7rem;
             line-height: .7rem;
             color: #212121;
           }
-  
+
           .detail {
             margin-top: .6rem;
             font-size: .6rem;
             line-height: .6rem;
             color: #999999;
-  
+
             span:first-child {
               display: inline-block;
               width: 4.2rem;
             }
           }
-  
+
           .sign {
             margin-top: .4rem;
             height: .7rem;
@@ -250,23 +534,23 @@
         }
       }
     }
-  
+
     .tips {
       padding: 1rem 0;
       text-align: center;
-  
+
       img {
         display: block;
         width: 6.5rem;
         margin: 0 auto;
       }
-  
+
       .text {
         font-size: .64rem;
         color: #999999;
       }
     }
-  
+
     .loading {
       position: absolute;
       width: 100%;
@@ -277,5 +561,6 @@
       text-align: center;
       color: #999999;
     }
+
   }
-  
+}
