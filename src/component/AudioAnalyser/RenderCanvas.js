@@ -19,7 +19,6 @@ const RenderCanvas = Target => {
         }
 
         /**
-         * @author j_bleach 2018/8/18
          * @describe canvas 配置
          */
         configCanvas() {
@@ -35,7 +34,6 @@ const RenderCanvas = Target => {
         }
 
         /**
-         * @author j_bleach 2018/8/18
          * @describe 画布初始化,停止动画
          */
         initCanvas() {
@@ -48,7 +46,6 @@ const RenderCanvas = Target => {
         }
 
         /**
-         * @author j_bleach 2018/8/18
          * @describe 动态绘制音频曲线
          */
         renderCurve = () => {

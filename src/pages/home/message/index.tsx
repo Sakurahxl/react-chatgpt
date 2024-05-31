@@ -76,25 +76,25 @@ const MessageApp = () => {
   useEffect(() => {
     getContactsList();
     refresh();
+    return () => {
+      clearInterval(timeRef.current);
+    };
   }, []);
 
   const refresh = () => {
     timeRef.current
       ? clearInterval(timeRef.current)
-      : (timeRef.current = setInterval(
-          () => {
-            console.log("refresh");
-            getContactsList();
-          },
-          1000 * 60
-        )); // 1 分钟刷新一次
+      : (timeRef.current = setInterval(() => {
+          console.log("refresh");
+          getContactsList();
+        }, 1000 * 60)); // 1 分钟刷新一次
   };
 
   // 获取联系人列表
   const getContactsList = async () => {
     let chatList = await getChatList();
-    console.log("chatList", chatList);
-
+    console.log(chatList);
+    
     let contacts = await getContacts();
     const contactWithId: IContact[] = [
       ...contacts.confirmed,
@@ -106,10 +106,12 @@ const MessageApp = () => {
       );
       if (i !== -1) {
         item.unread = chatList[i].unread;
+        item.description = chatList[i].lastMessage;
       }
       item.id = index + 1 + ""; // 使用数组索引作为 id，这里索引从 0 开始，所以加 1
       return item;
     });
+
     setContacts(contactWithId);
     setSentList(contacts.sent);
   };
@@ -172,6 +174,26 @@ const MessageApp = () => {
       </div>
       <PullToRefresh onRefresh={() => getContactsList()}>
         <List header={<ListTitle addContact={showModal} />}>
+          {sentList.map((contact: IContact) => {
+            return (
+              <List.Item
+                key={contact.id + "sent"}
+                arrow={<ClockCircleOutline color="var(--adm-color-primary)" />}
+                prefix={
+                  <Image
+                    src={contact.avatar}
+                    style={{ borderRadius: 20 }}
+                    fit="cover"
+                    width={40}
+                    height={40}
+                  />
+                }
+                description="等待验证中"
+              >
+                {contact.name}
+              </List.Item>
+            );
+          })}
           {contacts.map((contact: IContact) => {
             let isAccepted = contact.status === "accepted";
             return (
@@ -294,7 +316,7 @@ const MessageApp = () => {
                 );
               } else if (checkStatus(contacts, contact.account, "accepted")) {
                 icons = <CheckCircleOutline color="#76c6b8" />;
-              } else if (checkStatus(contacts, contact.account, "pending")) {
+              } else if (checkStatus(contacts, contact.account, "confirmed")) {
                 icons = (
                   <div>
                     <CheckCircleOutline

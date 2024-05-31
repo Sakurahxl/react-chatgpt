@@ -15,7 +15,10 @@ export function setLoginStatus(loggedIn:string) {
 // 登出
 export function getLogout() {
     localStorage.removeItem('loggedIn');
+    sessionStorage.removeItem('userAvatar');
+    sessionStorage.removeItem('userName');
     history.push("/");
+    window.location.reload();
 }
 
 // 存入提示词

@@ -11,7 +11,6 @@ class AudioAnalyser extends Component {
     static renderProps = ["status", "audioSrc"]
 
     /**
-     * @author yhwsl/2023/8/23
      * @describe ["status", "audioSrc"]判断是否渲染
      * @param props: object
      * @param nextProps: object

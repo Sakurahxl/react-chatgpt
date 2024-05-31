@@ -1,5 +1,4 @@
 /**
- * @author yhwsl on 2023/8/23
  * @describe 媒体记录（包含开始，暂停，停止等媒体流及回调操作）
  * @param Target 被装饰类（AudioAnalyser）
  */
@@ -19,10 +18,7 @@ const MediaRecorderFn = (Target) => {
       this.analyser = this.audioCtx.createAnalyser();
     }
 
-    /**
-     * @author j_bleach 2018/08/02 17:06
-     * @describe 浏览器navigator.mediaDevices兼容性处理
-     */
+    //浏览器navigator.mediaDevices兼容性处理
     static compatibility() {
       const promisifiedOldGUM = (constraints) => {
         // First get ahold of getUserMedia, if present
@@ -61,7 +57,6 @@ const MediaRecorderFn = (Target) => {
     }
 
     /**
-     * @author yhwsl on 2023/8/23
      * @describe 验证函数，如果存在即执行
      * @param fn: function 被验证函数
      * @param e: object 事件对象 event object
@@ -71,7 +66,6 @@ const MediaRecorderFn = (Target) => {
     }
 
     /**
-     * @author yhwsl on 2023/8/23
      * @describe 兼容safari
      * @returns mimeType
      */
@@ -88,7 +82,6 @@ const MediaRecorderFn = (Target) => {
     }
 
     /**
-     * @author j_bleach 2018/8/19
      * @describe 音频流转blob对象
      * @param type: string 音频的mime-type
      * @param cb: function 录音停止回调
@@ -154,7 +147,6 @@ const MediaRecorderFn = (Target) => {
     }
 
     /**
-     * @author yhwsl on 2023/8/23
      * @describe 开始录音
      */
     startAudio = () => {
@@ -176,7 +168,6 @@ const MediaRecorderFn = (Target) => {
       }
     };
     /**
-     * @author yhwsl on 2023/8/23
      * @describe 暂停录音
      */
     pauseAudio = () => {
@@ -190,7 +181,6 @@ const MediaRecorderFn = (Target) => {
       }
     };
     /**
-     * @author yhwsl on 2023/8/23
      * @describe 停止录音
      */
     stopAudio = () => {
@@ -212,7 +202,6 @@ const MediaRecorderFn = (Target) => {
     };
 
     /**
-     * @author yhwsl on 2023/8/23
      * @describe mediaRecorder音频记录
      * @param stream: binary data 音频流
      */
@@ -247,7 +236,6 @@ const MediaRecorderFn = (Target) => {
     }
 
     /**
-     * @author yhwsl on 2023/8/23
      * @describe 重置音频上下文（解决谷歌浏览器 音频数组链接断开问题）
      */
 
@@ -258,7 +246,6 @@ const MediaRecorderFn = (Target) => {
     }
 
     /**
-     * @author yhwsl on 2023/8/23
      * @describe 恢复录音
      */
     resumeAudio() {

@@ -11,6 +11,7 @@ import { URL_PREFIX } from "./config";
 //   console.log(data);
 // };
 
+
 // 获取视频列表
 export const getRankings = async (rId: number) => {
   const data = await axios.get(`${URL_PREFIX}/getRankings?rId=${rId}`);
@@ -54,7 +55,6 @@ export const getCommentsList = async (aId: number, p: number) => {
 //获取弹幕列表
 export const getBarragesList = async (cId: number) => {
   const data = await axios.get(`${URL_PREFIX}/av/barrage/${cId}`);
-  console.log(data);
-  
-  return data.data;
+  // const data = await axios.get(`https://api.bilibili.com/x/v1/dm/list.so?oid=${cId}`);
+  return data;
 };

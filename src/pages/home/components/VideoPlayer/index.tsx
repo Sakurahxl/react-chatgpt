@@ -69,6 +69,7 @@ const VideoPlayer = (props: any) => {
     isLive: live.isLive,
   });
   const playBtnClass = control.paused === true ? styles.play : styles.pause;
+  let isDragging = false;
 
   useEffect(() => {
     initVideo();
@@ -202,57 +203,41 @@ const VideoPlayer = (props: any) => {
       // 判断是否为电脑端,电脑端支持点击拖拽进度条
       if (judgeEnvir) {
         console.log("电脑端");
-        
-        progressDOM.addEventListener("mousedown", (e: any) => {
-          e.stopPropagation();
-
+        // 鼠标拖拽事件
+        progressDOM.addEventListener("mousedown", (e: MouseEvent) => {
+          e.preventDefault();
+          isDragging = true;
           const progressWrapperDOM = progressDOM.parentElement;
           width = progressWrapperDOM.offsetWidth;
           left = progressWrapperDOM.getBoundingClientRect().left;
-
-          const offsetX = e.clientX - left;
-          rate = offsetX / width;
-          if (rate > 1) {
-            rate = 1;
-          } else if (rate < 0) {
-            rate = 0;
-          }
-          const currentTime = videoDOM.duration * rate;
-          progressDOM.style.width = `${rate * 100}%`;
-          currentTimeDOM.innerHTML = formatDuration(currentTime, "0#:##");
+          document.addEventListener("mousemove", onMouseMove);
+          document.addEventListener("mouseup", onMouseUp);
 
           playOrPause();
         });
 
-      //   progressDOM.addEventListener("mousedown", (e: { stopPropagation?: any; clientX?: number; }) => {
-      //     e.stopPropagation();
-      //     handleMouseDown(e);
-      //   });
-      //   const handleMouseMove = (e: { clientX: number; }) => {
-      //     if (!progressBarRef.current) return;
+        function onMouseMove(e: MouseEvent) {
+          if (!isDragging) return;
+          const progressWrapperDOM = progressDOM.parentElement;
+          width = progressWrapperDOM.offsetWidth;
+          left = progressWrapperDOM.getBoundingClientRect().left;
+          e.preventDefault();
+          rate = (e.clientX - left) / width;
+          rate = Math.max(0, Math.min(rate, 1)); // Ensure rate is between 0 and 1
 
-      //     const rect = progressBarRef.current.getBoundingClientRect();
-      //     const offsetX = e.clientX - rect.left;
-      //     const width = rect.width;
-      //     let newProgress = (offsetX / width) * 100;
+          const currentTime = videoDOM.duration * rate;
+          progressDOM.style.width = `${rate * 100}%`;
+          currentTimeDOM.innerHTML = formatDuration(currentTime, "0#:##");
+        }
 
-      //     if (newProgress < 0) newProgress = 0;
-      //     if (newProgress > 100) newProgress = 100;
-
-      //     setProgress(newProgress);
-      //     if (onChange) onChange(newProgress);
-      //   };
-
-      //   const handleMouseUp = () => {
-      //     document.removeEventListener("mousemove", handleMouseMove);
-      //     document.removeEventListener("mouseup", handleMouseUp);
-      //   };
-
-      //   const handleMouseDown = (e: { clientX: number; }) => {
-      //     handleMouseMove(e);
-      //     document.addEventListener("mousemove", handleMouseMove);
-      //     document.addEventListener("mouseup", handleMouseUp);
-      //   };
+        function onMouseUp(e: MouseEvent) {
+          if (!isDragging) return;
+          isDragging = false;
+          videoDOM.currentTime = videoDOM.duration * rate;
+          document.removeEventListener("mousemove", onMouseMove);
+          document.removeEventListener("mouseup", onMouseUp);
+          playOrPause();
+        }
       }
     } else {
       // 直播时处理
@@ -328,16 +313,23 @@ const VideoPlayer = (props: any) => {
   const getBarrages = () => {
     getBarragesList(video.cId).then((result) => {
       const barrages: any = [];
-      if (result.code === "1") {
-        result.data.forEach((data: any) => {
-          barrages.push({
-            type: data.type === "1" ? BarrageType.RANDOM : BarrageType.FIXED,
-            color: "#" + Number(data.decimalColor).toString(16),
-            content: data.content,
-            time: Number(data.time),
-          });
-        });
-      }
+      console.log("result", result);
+      var parseString = require("xml2js").parseString;
+      parseString(result, function (err:any, result:any) {
+        console.log(result);
+      });
+      // if (result.code === "1") {
+      //   result.data.forEach((data: any) => {
+      //     barrages.push({
+      //       type: data.type === "1" ? BarrageType.RANDOM : BarrageType.FIXED,
+      //       color: "#" + Number(data.decimalColor).toString(16),
+      //       content: data.content,
+      //       time: Number(data.time),
+      //     });
+      //   });
+      // }
+      console.log("b", barrages);
+
       // 初始化弹幕列表
       setInitBarrages(barrages);
       setBarrages(initBarrages.slice());

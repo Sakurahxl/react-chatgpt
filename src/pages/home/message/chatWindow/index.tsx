@@ -83,12 +83,12 @@ const chatWindow = () => {
     }
     let data = await isFirstChat(toUserParams.toUser);
     // 如果不是第一次聊天为1
-    if (data === 1) {
+    // if (data === 1) {
       getCurrentUserInfo();
       setJudgeEnvir(window.navigator.userAgent.indexOf("Html5Plus") === -1);
       getChatHistoryData();
       getChatStatus();
-    }
+    // }
   };
 
   const getChatStatus = async () => {
@@ -98,6 +98,9 @@ const chatWindow = () => {
 
   const getChatHistoryData = async () => {
     let data = await getChatHistory(toUserParams.toUser ?? "");
+    data = data.filter((item: TContent) => {
+      return item.message !== "";
+    });
     setCurrentChatHistory(data);
   };
   // 建立websocket连接
@@ -217,7 +220,10 @@ const chatWindow = () => {
             let timeDom = (
               <div className={styles["message-time"]}>{item.sendTime}</div>
             );
-            if (item.sendUser === toUserParams.toUser || (!toUserParams.toUser && !item.sendUser)) {
+            if (
+              item.sendUser === toUserParams.toUser ||
+              (!toUserParams.toUser && !item.sendUser)
+            ) {
               return (
                 <Fragment key={index}>
                   {timeDom}

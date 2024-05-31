@@ -1,7 +1,7 @@
 import axios from "@/utils/axios";
 import { URL_PREFIX } from "./config";
 
-// 登录
+// 获取联系人
 export const getContacts = async () => {
   const account = localStorage.getItem("loggedIn");
   const data = await axios.get(`${URL_PREFIX}/getContacts`, {

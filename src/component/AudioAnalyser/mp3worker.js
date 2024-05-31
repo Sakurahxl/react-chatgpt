@@ -5621,14 +5621,6 @@ const workercode = () => {
 
 //package mp3;
 
-        /**
-         * Layer III side information.
-         *
-         * @author Ken
-         *
-         */
-
-
 
         function ScaleFac(arrL, arrS, arr21, arr12) {
 
@@ -10098,12 +10090,6 @@ const workercode = () => {
 
 //package mp3;
 
-        /**
-         * Variables used for --nspsytune
-         *
-         * @author Ken
-         *
-         */
         function NsPsy() {
             this.last_en_subshort = new_float_n([4, 9]);
             this.lastAttacks = new_int(4);

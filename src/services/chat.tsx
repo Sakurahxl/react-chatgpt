@@ -10,7 +10,7 @@ let friendsList: any[] = [];
 export const getChatHistory = async (toUser: string) => {
   const fromUser = getLoginStatus();
   const data = await axios.get(`${URL_PREFIX}/chat/getChatRecords/`, {
-    params: { toUser, fromUser, startIndex: 0, pageSize: 10 },
+    params: { toUser, fromUser, startIndex: 0, pageSize: 100 },
   }); 
   return data.data;
 };

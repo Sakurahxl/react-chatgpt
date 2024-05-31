@@ -7,6 +7,7 @@ import { getLogout, setLoginStatus } from "./auth";
 export const login = async (params: any) => {
   const data = await axios.post(`${URL_PREFIX}/login`, params);
   if (data.status === 200 && data.data == "Login successfully") {
+    getInfo({ account: params.account });
     setLoginStatus(params.account);
     history.push("/home");
   }
